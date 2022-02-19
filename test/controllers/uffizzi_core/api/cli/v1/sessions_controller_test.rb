@@ -1,13 +1,8 @@
 # frozen_string_literal: true
 
 require 'test_helper'
-# require "database/setup"
 
 class UffizziCore::Api::Cli::V1::SessionsControllerTest < ActionController::TestCase
-  setup do
-    @routes = UffizziCore::Engine.routes
-  end
-
   test '#create - successful' do
     password = generate(:password)
     user = create(:user, :active, password: password)

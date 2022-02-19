@@ -37,4 +37,8 @@ class ActiveSupport::TestCase
   include Minitest::Hooks
   include ActiveModel::Validations
   include UffizziCore::AuthManagement
+
+  setup do
+    @routes = UffizziCore::Engine.routes
+  end
 end

@@ -8,6 +8,4 @@ UffizziCore::Engine.routes.draw do
       end
     end
   end
-
-  resource :session, only: ['create', 'destroy']
 end
