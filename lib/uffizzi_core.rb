@@ -4,6 +4,7 @@ require 'uffizzi_core/version'
 require 'uffizzi_core/engine'
 
 require 'aasm'
+require 'active_model_serializers'
 require 'ancestry'
 require 'enumerize'
 require 'pg'
