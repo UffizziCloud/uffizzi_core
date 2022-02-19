@@ -1,0 +1,40 @@
+version: "3.9"
+
+services:
+  gem:
+    build: .
+    depends_on:
+      - db
+    volumes:
+      - ./:/gem:cached
+      - ~/.ssh:/root/.ssh
+      - ~/.bash_history:/root/.bash_history
+      - bundle_cache:/bundle_cache
+    environment:
+      - BUNDLE_PATH=/bundle_cache
+      - GEM_HOME=/bundle_cache
+      - GEM_PATH=/bundle_cache
+      - DATABASE_HOST=db
+      - DATABASE_USERNAME=postgres
+      - DATABASE_PASSWORD=postgres
+
+  db:
+    image: postgres:11.4
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+
+  bundle_cache:
+    image: busybox
+    volumes:
+      - bundle_cache:/bundle_cache
+
+volumes:
+  bundle_cache:
+  public:
+
+networks:
+  default:
+    name: 'uffizzi_default_network'
