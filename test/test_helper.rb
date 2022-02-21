@@ -8,14 +8,15 @@ ActiveRecord::Migrator.migrations_paths << File.expand_path('../db/migrate', __d
 
 Dir[File.expand_path('support/**/*.rb', __dir__)].sort.each { |f| require f }
 
+require 'awesome_print'
+require 'byebug'
 require 'factory_bot'
+require 'faker'
+require 'minitest/hooks/default'
+require 'minitest-power_assert'
+require 'mocha/minitest'
 require 'rails/test_help'
 require 'webmock/minitest'
-require 'mocha/minitest'
-require 'minitest/hooks/default'
-require 'byebug'
-require 'minitest-power_assert'
-require 'awesome_print'
 
 FactoryBot.reload
 WebMock.disable_net_connect!
