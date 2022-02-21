@@ -248,6 +248,8 @@ GEM
       rubocop (>= 0.90, < 2.0)
     rubocop-rake (0.6.0)
       rubocop (~> 1.0)
+    rubocop-rspec (2.8.0)
+      rubocop (~> 1.19)
     ruby-progressbar (1.11.0)
     sprockets (4.0.2)
       concurrent-ruby (~> 1.0)
@@ -298,6 +300,7 @@ DEPENDENCIES
   rubocop
   rubocop-minitest
   rubocop-rake
+  rubocop-rspec
   uffizzi_core!
   webmock
 
