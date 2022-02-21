@@ -23,8 +23,13 @@ jobs:
         with:
           ruby-version: 3.0.2
           bundler-cache: true
+      - name: Setup Database
+        run: bundle exec rails db:create db:schema:load
+        env:
+          DATABASE_HOST: localhost
+          DATABASE_PASSWORD: postgres
       - name: Run migrations
         run: bundle exec rails db:migrate
         env:
-          DATABASE_HOST: postgres
+          DATABASE_HOST: localhost
           DATABASE_PASSWORD: postgres
