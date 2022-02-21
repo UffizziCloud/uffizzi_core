@@ -24,6 +24,6 @@ class UffizziCore::Api::Cli::V1::SessionsControllerTest < ActionController::Test
 
     assert_response :unprocessable_entity
     assert_not_empty JSON.parse(response.body)['errors']
-    assert { !signed_in? }
+    assert { signed_in? }
   end
 end

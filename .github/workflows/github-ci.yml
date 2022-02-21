@@ -9,10 +9,11 @@ jobs:
         with:
           ruby-version: 3.0.2
           bundler-cache: true
-      - run: bundle exec rubocop
+      - name: Run rubocop
+        run: bundle exec rubocop
   test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Run migrations
+      - name: Run tests
         run: docker-compose run --rm core bash -c "bundle install && bundle exec rails db:create && bundle exec rails test"
