@@ -3,9 +3,6 @@
 module UffizziCore::StateMachineConcern
   extend ActiveSupport::Concern
 
-  included do
-  end
-
   class_methods do
     def aasm(attribute, *args)
       attr_accessor(:"#{attribute}_event")

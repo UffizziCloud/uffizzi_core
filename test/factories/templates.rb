@@ -3,7 +3,6 @@
 FactoryBot.define do
   factory :template, class: UffizziCore::Template do
     name
-    payload {}
     project { nil }
     added_by_id { nil }
     creation_source { UffizziCore::Template.creation_source.manual }
