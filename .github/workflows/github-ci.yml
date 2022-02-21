@@ -9,5 +9,4 @@ jobs:
         with:
           ruby-version: 3.0.2
           bundler-cache: true
-      - run: ls -la
-      - run: bundle exec rubocop
+      - run: bundle exec rubocop --config .rubocop.yml
