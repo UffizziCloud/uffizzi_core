@@ -1,0 +1,8 @@
+name: Uffizzi Core CI
+on: [push]
+jobs:
+  lint:
+    runs-on: ruby:3.0.2-alpine3.14
+    steps:
+      - run: bundle install
+      - run: bundle exec rubocop
