@@ -27,7 +27,7 @@ class UffizziCore::User < ActiveRecord::Base
   enumerize :creation_source, in: [:system, :online_registration, :google, :sso], predicates: true
 
   def organizational_account
-    accounts.find_by(kind: Account.kind.organizational)
+    accounts.find_by(kind: UffizziCore::Account.kind.organizational)
   end
 
   def active_projects

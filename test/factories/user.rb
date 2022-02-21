@@ -29,13 +29,14 @@ FactoryBot.define do
 
     trait :with_organizational_account do
       after(:create) do |user, _evaluator|
-        create(:account, :with_admin, kind: Account.kind.organizational, admin: user, created_at: user.created_at)
+        create(:account, :with_admin, kind: UffizziCore::Account.kind.organizational, admin: user, created_at: user.created_at)
       end
     end
 
     trait :with_organizational_account_and_stripe_enitities do
       after(:create) do |user, _evaluator|
-        create(:account, :with_admin, :with_stripe_enitities, kind: Account.kind.organizational, admin: user, created_at: user.created_at)
+        create(:account, :with_admin, :with_stripe_enitities, kind: UffizziCore::Account.kind.organizational, admin: user,
+                                                              created_at: user.created_at)
       end
     end
 

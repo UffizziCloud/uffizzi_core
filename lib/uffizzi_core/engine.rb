@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'active_model_serializers'
+
 module UffizziCore
   class Engine < ::Rails::Engine
     isolate_namespace UffizziCore
@@ -33,5 +35,7 @@ module UffizziCore
       users: :uffizzi_core_users,
       users_roles: :uffizzi_core_users_roles,
     }
+
+    ActiveModelSerializers.config.adapter = :json
   end
 end
