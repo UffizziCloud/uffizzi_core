@@ -12,25 +12,7 @@ jobs:
       - run: bundle exec rubocop
   test:
     runs-on: ubuntu-latest
-    # services:
-    #   postgres:
-    #     image: postgres
-    #     env:
-    #       POSTGRES_USER: postgres
-    #       POSTGRES_PASSWORD: postgres
     steps:
       - uses: actions/checkout@v2
-      # - uses: ruby/setup-ruby@v1
-      #   with:
-      #     ruby-version: 3.0.2
-      #     bundler-cache: true
-      # - name: Setup Database
-      #   run: bundle exec rails db:create db:schema:load
-      #   env:
-      #     DATABASE_HOST: localhost
-      #     DATABASE_PASSWORD: postgres
       - name: Run migrations
-        run: docker-compose run --rm core bash -c "bundle exec rails db:create && bundle exec rails test"
-        # env:
-        #   DATABASE_HOST: localhost
-        #   DATABASE_PASSWORD: postgres
+        run: docker-compose run --rm core bash -c "bundle install && bundle exec rails db:create && bundle exec rails test"
