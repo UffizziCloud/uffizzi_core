@@ -13,13 +13,13 @@ module Dummy
   class Application < Rails::Application
     config.load_defaults(Rails::VERSION::STRING.to_f)
 
-    config.hosts = Settings.allowed_hosts
+    config.hosts = ::Settings.allowed_hosts
 
     config.middleware.insert_before 0, Rack::Cors do
       allow do
         origins do |source|
           uri = URI.parse(source)
-          Settings.allowed_hosts.any? { |host| uri.host == host || uri.host.ends_with?(host) }
+          ::Settings.allowed_hosts.any? { |host| uri.host == host || uri.host.ends_with?(host) }
         end
         resource '*', headers: :any, methods: [:get, :post, :options, :put, :patch, :delete], credentials: true
       end

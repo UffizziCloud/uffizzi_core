@@ -1,4 +1,3 @@
-allowed_hosts: <%= ENV['ALLOWED_HOSTS']&.split(',') || [] %>
 compose:
   default_memory: 125
   memory_postfixes: <%= ['b', 'k', 'm', 'g'] %>

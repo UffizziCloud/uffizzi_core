@@ -17,6 +17,7 @@ require 'minitest-power_assert'
 require 'mocha/minitest'
 require 'rails/test_help'
 require 'webmock/minitest'
+require 'octokit'
 
 FactoryBot.reload
 WebMock.disable_net_connect!
@@ -38,6 +39,8 @@ class ActiveSupport::TestCase
   include Minitest::Hooks
   include ActiveModel::Validations
   include UffizziCore::AuthManagement
+  include UffizziCore::FixtureSupport
+  include UffizziCore::GithubStubSupport
 
   setup do
     @routes = UffizziCore::Engine.routes
