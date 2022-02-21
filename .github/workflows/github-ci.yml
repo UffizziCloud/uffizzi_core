@@ -26,4 +26,5 @@ jobs:
       - name: Run migrations
         run: bundle exec rails db:migrate
         env:
+          DATABASE_HOST: postgres
           DATABASE_PASSWORD: postgres
