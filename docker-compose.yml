@@ -17,7 +17,7 @@ services:
       - DATABASE_HOST=db
       - DATABASE_USER=postgres
       - DATABASE_PASSWORD=postgres
-      - ALLOWED_HOSTS=core
+      - ALLOWED_HOSTS=core,localhost,localhost:7007,0.0.0.0,0.0.0.0:7007
     ports:
       - 7007:7007
     command: bin/rails server -b 0.0.0.0 -p 7007 -e development

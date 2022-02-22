@@ -3,6 +3,9 @@
 class UffizziCore::Api::Cli::V1::ComposeFile::TemplateForm
   include UffizziCore::ApplicationFormWithoutActiveRecord
 
+  SECRETS_ERROR_KEY = 'secret_variables'
+  TEMPLATE_BUILD_ERROR_KEY = 'template_build_error'
+
   attribute :credentials
   attribute :project, UffizziCore::Project
   attribute :user, UffizziCore::User
@@ -33,9 +36,9 @@ class UffizziCore::Api::Cli::V1::ComposeFile::TemplateForm
   def check_template_attributes
     case template_build_error
     when UffizziCore::ComposeFile::SecretsError
-      errors.add(UffizziCore::ComposeFileService::SECRETS_ERROR_KEY, template_build_error.message)
+      errors.add(SECRETS_ERROR_KEY, template_build_error.message)
     when UffizziCore::ComposeFile::BuildError
-      errors.add(UffizziCore::ComposeFileService::TEMPLATE_BUILD_ERROR_KEY, template_build_error.message)
+      errors.add(TEMPLATE_BUILD_ERROR_KEY, template_build_error.message)
     end
   end
 end
