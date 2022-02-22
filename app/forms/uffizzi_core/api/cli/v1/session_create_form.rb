@@ -16,7 +16,7 @@ class UffizziCore::Api::Cli::V1::SessionCreateForm
   def check_authenticate
     return unless wrong_email_or_password?
 
-    errors.add(:password, :email_or_password_invalid)
+    errors.add(:password, 'Email or password is incorrect.')
   end
 
   private
