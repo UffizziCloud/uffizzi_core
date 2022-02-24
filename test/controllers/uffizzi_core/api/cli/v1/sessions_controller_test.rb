@@ -26,4 +26,15 @@ class UffizziCore::Api::Cli::V1::SessionsControllerTest < ActionController::Test
     assert_not_empty JSON.parse(response.body)['errors']
     assert { !signed_in? }
   end
+
+  test '#destroy' do
+    user = create(:user)
+
+    sign_in user
+
+    delete :destroy, format: :json
+
+    assert_response :success
+    assert { !signed_in? }
+  end
 end
