@@ -9,6 +9,11 @@ UffizziCore::Engine.routes.draw do
         resources :projects, only: ['index'], param: :slug do
           scope module: :projects do
             resource :compose_file, only: ['show', 'create', 'destroy']
+            resources :secrets, only: ['index', 'destroy'] do
+              collection do
+                post :bulk_create
+              end
+            end
           end
         end
         resource :session, only: ['create', 'destroy']
