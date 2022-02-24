@@ -7,7 +7,7 @@ FactoryBot.define do
     branch
     path
     auto_deploy { UffizziCore::ComposeFile::STATE_DISABLED }
-    kind { ComposeFile.kind.main }
+    kind { UffizziCore::ComposeFile.kind.main }
 
     trait :auto_deploy do
       auto_deploy { UffizziCore::ComposeFile::STATE_ENABLED }
