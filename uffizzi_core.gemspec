@@ -34,6 +34,8 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'responders'
   spec.add_dependency 'rolify'
   spec.add_dependency 'virtus'
+  spec.add_dependency 'rswag-api'
+  spec.add_dependency 'rswag-ui'
 
   spec.add_development_dependency 'awesome_print'
   spec.add_development_dependency 'bcrypt', '~> 3.1.7'
@@ -51,8 +53,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'puma'
   spec.add_development_dependency 'rack-cors'
   spec.add_development_dependency 'rake'
-  spec.add_development_dependency 'rswag-api'
-  spec.add_development_dependency 'rswag-ui'
   spec.add_development_dependency 'rubocop'
   spec.add_development_dependency 'rubocop-minitest'
   spec.add_development_dependency 'rubocop-rake'
