@@ -11,6 +11,8 @@ require 'pg'
 require 'responders'
 require 'rolify'
 require 'virtus'
+require 'rswag-api'
+require 'rswag-ui'
 
 module UffizziCore
   mattr_accessor :table_names, default: {}
