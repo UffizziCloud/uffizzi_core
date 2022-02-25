@@ -19,4 +19,10 @@ class UffizziCore::Api::Cli::ApplicationController < ActionController::Base
   def render_not_found
     render json: { errors: { title: ['Resource Not Found'] } }, status: :not_found
   end
+
+  def render_errors(errors)
+    json = { errors: errors }
+
+    render json: json, status: :unprocessable_entity
+  end
 end
