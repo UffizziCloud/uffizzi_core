@@ -14,4 +14,11 @@ class UffizziCore::Api::Cli::ApplicationController < ActionController::Base
   def self.responder
     UffizziCore::JsonResponder
   end
+
+
+  def render_errors(errors)
+    json = { errors: errors }
+
+    render json: json, status: :unprocessable_entity
+  end
 end
