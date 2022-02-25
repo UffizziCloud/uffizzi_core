@@ -15,6 +15,8 @@ PATH
       rails (~> 6.1.0)
       responders
       rolify
+      rswag-api
+      rswag-ui
       virtus
 
 GEM
@@ -341,8 +343,6 @@ DEPENDENCIES
   puma
   rack-cors
   rake
-  rswag-api
-  rswag-ui
   rubocop
   rubocop-minitest
   rubocop-rake
