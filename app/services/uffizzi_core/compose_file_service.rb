@@ -23,8 +23,8 @@ class UffizziCore::ComposeFileService
       containers_data = UffizziCore::ComposeFile::ServicesOptionsService.parse(compose_data['services'], configs_data, secrets_data,
                                                                                compose_payload)
 
-      # continuous_preview_option = UffizziCore::ComposeFile::ConfigOptionService.continuous_preview_option(compose_data)
-      # continuous_preview_data = UffizziCore::ComposeFile::ContinuousPreviewOptionsService.parse(continuous_preview_option)
+      continuous_preview_option = UffizziCore::ComposeFile::ConfigOptionService.continuous_preview_option(compose_data)
+      continuous_preview_data = UffizziCore::ComposeFile::ContinuousPreviewOptionsService.parse(continuous_preview_option)
 
       ingress_option = UffizziCore::ComposeFile::ConfigOptionService.ingress_option(compose_data)
       ingress_data = UffizziCore::ComposeFile::IngressOptionsService.parse(ingress_option, compose_data['services'])
@@ -32,7 +32,7 @@ class UffizziCore::ComposeFileService
       {
         containers: containers_data,
         ingress: ingress_data,
-        continuous_preview: {},
+        continuous_preview: continuous_preview_data,
       }
     end
 
