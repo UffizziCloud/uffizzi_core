@@ -41,6 +41,7 @@ class ActiveSupport::TestCase
   include UffizziCore::AuthManagement
   include UffizziCore::FixtureSupport
   include UffizziCore::GithubStubSupport
+  include UffizziCore::GoogleStubSupport
 
   setup do
     @routes = UffizziCore::Engine.routes

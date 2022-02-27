@@ -483,29 +483,29 @@ class UffizziCore::Api::Cli::V1::Projects::DeploymentsControllerTest < ActionCon
   #   assert { ActivityItem::Docker.count == 2 }
   # end
 
-  # test '#destroy' do
-  #   google_dns_stub
-  #   UffizziCore::GoogleCloudDnsClient.any_instance.stubs(:delete_dns_record).returns(true)
+  test '#destroy' do
+    google_dns_stub
+    UffizziCore::GoogleCloudDnsClient.any_instance.stubs(:delete_dns_record).returns(true)
 
-  #   stubbed_request = stub_delete_controller_deployment_request(@deployment)
-  #   container = create(:container, :with_public_port, deployment: @deployment)
+    stubbed_request = stub_delete_controller_deployment_request(@deployment)
+    container = create(:container, :with_public_port, deployment: @deployment)
 
-  #   differences = {
-  #     -> { UffizziCore::Deployment.active.count } => -1,
-  #   }
+    differences = {
+      -> { UffizziCore::Deployment.active.count } => -1,
+    }
 
-  #   params = {
-  #     project_slug: @project.slug,
-  #     id: @deployment.id,
-  #   }
+    params = {
+      project_slug: @project.slug,
+      id: @deployment.id,
+    }
 
-  #   assert_difference differences do
-  #     delete :destroy, params: params, format: :json
-  #   end
+    assert_difference differences do
+      delete :destroy, params: params, format: :json
+    end
 
-  #   assert_requested stubbed_request
-  #   assert { container.reload.disabled? }
+    assert_requested stubbed_request
+    assert { container.reload.disabled? }
 
-  #   assert_response :success
-  # end
+    assert_response :success
+  end
 end
