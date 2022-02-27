@@ -78,7 +78,7 @@ class UffizziCore::Api::Cli::V1::Projects::DeploymentsController < UffizziCore::
   # @response 204 No Content
   # @response 401 Not authorized
   def destroy
-    DeploymentService.disable!(deployment)
+    UffizziCore::DeploymentService.disable!(deployment)
 
     head :no_content
   end
@@ -99,8 +99,8 @@ class UffizziCore::Api::Cli::V1::Projects::DeploymentsController < UffizziCore::
         dependencies: dependencies_params[:dependencies] || []
       }
 
-      kind = ComposeFile.kind.temporary
-      Cli::ComposeFileService.create(create_params, kind)
+      kind = UffizziCore::ComposeFile.kind.temporary
+      UffizziCore::Cli::ComposeFileService.create(create_params, kind)
     else
       raise ActiveRecord::RecordNotFound if existing_compose_file.blank?
 

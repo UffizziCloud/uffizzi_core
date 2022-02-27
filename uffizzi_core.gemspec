@@ -27,6 +27,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'activesupport', '~> 6.1.0'
   spec.add_dependency 'ancestry'
   spec.add_dependency 'dotenv'
+  spec.add_dependency 'google-cloud-dns'
   spec.add_dependency 'enumerize'
   spec.add_dependency 'octokit'
   spec.add_dependency 'pg', '>= 0.18', '< 2.0'

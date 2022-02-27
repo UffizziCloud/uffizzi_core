@@ -30,7 +30,7 @@ class UffizziCore::Api::Cli::V1::Projects::DeploymentSerializer < UffizziCore::B
   end
 
   def preview_url
-    DeploymentService.build_preview_url(object)
+    UffizziCore::DeploymentService.build_preview_url(object)
   end
 
   def tag
@@ -58,9 +58,9 @@ class UffizziCore::Api::Cli::V1::Projects::DeploymentSerializer < UffizziCore::B
     last_event = object.ingress_container&.activity_items&.last&.events&.last
 
     case last_event&.state
-    when Event.state.deployed
+    when UffizziCore::Event.state.deployed
       :deployed
-    when Event.state.failed, Event.state.timeout, Event.state.cancelled
+    when UffizziCore::Event.state.failed, UffizziCore::Event.state.timeout, UffizziCore::Event.state.cancelled
       :failed
     else
       count_activity_items.to_i > 1 ? :updating : :pending
