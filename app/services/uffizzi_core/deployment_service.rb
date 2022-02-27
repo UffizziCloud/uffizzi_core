@@ -230,14 +230,16 @@ module UffizziCore::DeploymentService
         repo = container.repo
         activity_item = case repo.type
                         when UffizziCore::Repo::Github.name
-                          ActivityItemService.create_github_item!(repo, container)
+                          UffizziCore::ActivityItemService.create_github_item!(repo, container)
                         else
-                          ActivityItemService.create_docker_item!(repo, container)
+                          UffizziCore::ActivityItemService.create_docker_item!(repo, container)
         end
 
         create_default_activity_item_event(activity_item)
 
-        UffizziCore::ActivityItem::Docker::UpdateDigestJob.perform_async(activity_item.id) if RepoService.credential(repo).present? && activity_item.docker?
+        if UffizziCore::RepoService.credential(repo).present? && activity_item.docker?
+          UffizziCore::ActivityItem::Docker::UpdateDigestJob.perform_async(activity_item.id)
+        end
         UffizziCore::Deployment::ManageDeployActivityItemJob.perform_in(5.seconds, activity_item.id)
       end
     end

@@ -238,86 +238,86 @@ class UffizziCore::Api::Cli::V1::Projects::DeploymentsControllerTest < ActionCon
     assert_response :not_found
   end
 
-  # test '#deploy_containers' do
-  #   Sidekiq::Worker.clear_all
-  #   Sidekiq::Testing.fake!
+  test '#deploy_containers' do
+    Sidekiq::Worker.clear_all
+    Sidekiq::Testing.fake!
 
-  #   stub_dockerhub_login
-  #   repo_1 = create(:repo, :docker_hub, project: @project)
-  #   repo_2 = create(:repo, :docker_hub, project: @project)
+    stub_dockerhub_login
+    repo_1 = create(:repo, :docker_hub, project: @project)
+    repo_2 = create(:repo, :docker_hub, project: @project)
 
-  #   create(:container, :with_public_port, deployment: @deployment, repo: repo_1)
-  #   create(:container, :with_public_port, deployment: @deployment, repo: repo_2)
+    create(:container, :with_public_port, deployment: @deployment, repo: repo_1)
+    create(:container, :with_public_port, deployment: @deployment, repo: repo_2)
 
-  #   params = { project_slug: @project.slug, id: @deployment.id }
+    params = { project_slug: @project.slug, id: @deployment.id }
 
-  #   post :deploy_containers, params: params, format: :json
+    post :deploy_containers, params: params, format: :json
 
-  #   assert_response :success
-  #   assert { Deployment::DeployContainersJob.jobs.size == 1 }
+    assert_response :success
+    assert { UffizziCore::Deployment::DeployContainersJob.jobs.size == 1 }
 
-  #   Sidekiq::Worker.clear_all
-  #   Sidekiq::Testing.inline!
-  # end
+    Sidekiq::Worker.clear_all
+    Sidekiq::Testing.inline!
+  end
 
-  # test '#deploy_containers if deployment has not created yet' do
-  #   ControllerService.expects(:deployment_exists?).returns(false)
-  #   params = { project_slug: @project.slug, id: @deployment.id }
+  test '#deploy_containers if deployment has not created yet' do
+    UffizziCore::ControllerService.expects(:deployment_exists?).returns(false)
+    params = { project_slug: @project.slug, id: @deployment.id }
 
-  #   assert_raises ControllerService::DeploymentNotFoundError do
-  #     post :deploy_containers, params: params, format: :json
-  #   end
-  # end
+    assert_raises UffizziCore::DeploymentNotFoundError do
+      post :deploy_containers, params: params, format: :json
+    end
+  end
 
-  # test '#deploy_containers create a new docker hub activity item' do
-  #   ControllerService.expects(:deployment_exists?).returns(true)
+  test '#deploy_containers create a new docker hub activity item' do
+    UffizziCore::ControllerService.expects(:deployment_exists?).returns(true)
 
-  #   webhooks_data = json_fixture('files/dockerhub/webhooks/push/event_data.json')
-  #   digest_data = json_fixture('files/dockerhub/digest.json')
-  #   deployment_containers_data = json_fixture('files/controller/deployment_containers.json')
-  #   deployment_data = json_fixture('files/controller/deployments.json')
+    webhooks_data = json_fixture('files/dockerhub/webhooks/push/event_data.json')
+    digest_data = json_fixture('files/dockerhub/digest.json')
+    deployment_containers_data = json_fixture('files/controller/deployment_containers.json')
+    deployment_data = json_fixture('files/controller/deployments.json')
 
-  #   stubbed_deployment_request = stub_get_controller_deployment_request(@deployment, deployment_data)
-  #   stubbed_containers_request = stub_controller_containers_request(@deployment, deployment_containers_data)
-  #   stubbed_deploy_containers_request = stub_deploy_containers_request(@deployment)
-  #   stubbed_dockerhub_login = stub_dockerhub_login
+    stubbed_deployment_request = stub_get_controller_deployment_request(@deployment, deployment_data)
+    stubbed_containers_request = stub_controller_containers_request(@deployment, deployment_containers_data)
+    stubbed_deploy_containers_request = stub_deploy_containers_request(@deployment)
+    stubbed_dockerhub_login = stub_dockerhub_login
 
-  #   params = { project_slug: @project.slug, id: @deployment.id }
+    params = { project_slug: @project.slug, id: @deployment.id }
 
-  #   namespace, name = webhooks_data[:repository][:repo_name].split('/')
+    namespace, name = webhooks_data[:repository][:repo_name].split('/')
 
-  #   repo = create(:repo,
-  #                 :docker_hub,
-  #                 project: @project,
-  #                 namespace: namespace,
-  #                 name: name)
+    repo = create(:repo,
+                  :docker_hub,
+                  project: @project,
+                  namespace: namespace,
+                  name: name)
 
-  #   container = create(
-  #     :container,
-  #     :continuously_deploy_enabled,
-  #     deployment: @deployment,
-  #     repo: repo,
-  #     image: webhooks_data[:repository][:repo_name],
-  #     tag: webhooks_data[:push_data][:tag],
-  #     controller_name: deployment_containers_data.first[:spec][:containers].first[:controllerName]
-  #   )
+    container = create(
+      :container,
+      :continuously_deploy_enabled,
+      deployment: @deployment,
+      repo: repo,
+      image: webhooks_data[:repository][:repo_name],
+      tag: webhooks_data[:push_data][:tag],
+      controller_name: deployment_containers_data.first[:spec][:containers].first[:controllerName]
+    )
 
-  #   create(:credential, :docker_hub, account: @account)
+    create(:credential, :docker_hub, account: @account)
 
-  #   stubbed_digest_auth = stub_dockerhub_auth_for_digest(container.image)
-  #   stubbed_digest = stub_dockerhub_get_digest(container.image, container.tag, digest_data)
+    stubbed_digest_auth = stub_dockerhub_auth_for_digest(container.image)
+    stubbed_digest = stub_dockerhub_get_digest(container.image, container.tag, digest_data)
 
-  #   post :deploy_containers, params: params, format: :json
+    post :deploy_containers, params: params, format: :json
 
-  #   assert_requested stubbed_digest
-  #   assert_requested stubbed_digest_auth
-  #   assert_requested stubbed_dockerhub_login
-  #   assert_requested stubbed_deploy_containers_request
-  #   assert_requested stubbed_containers_request
-  #   assert_requested stubbed_deployment_request
-  #   assert { Deployment::DeployContainersJob.jobs.empty? }
-  #   assert { ActivityItem::Docker.count == 1 }
-  # end
+    assert_requested stubbed_digest
+    assert_requested stubbed_digest_auth
+    assert_requested stubbed_dockerhub_login
+    assert_requested stubbed_deploy_containers_request
+    assert_requested stubbed_containers_request
+    assert_requested stubbed_deployment_request
+    assert { UffizziCore::Deployment::DeployContainersJob.jobs.empty? }
+    assert { UffizziCore::ActivityItem::Docker.count == 1 }
+  end
 
   # test '#deploy_containers skip activity item creation if existing has not finished yet' do
   #   ControllerService.expects(:deployment_exists?).returns(true)

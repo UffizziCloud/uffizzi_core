@@ -45,6 +45,7 @@ class ActiveSupport::TestCase
   include UffizziCore::GithubStubSupport
   include UffizziCore::GoogleStubSupport
   include UffizziCore::ControllerStubSupport
+  include UffizziCore::DockerHubStubSupport
   include UffizziCore::FixtureSupport
 
   setup do
