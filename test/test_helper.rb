@@ -42,6 +42,7 @@ class ActiveSupport::TestCase
   include UffizziCore::AuthManagement
   include UffizziCore::GoogleStubSupport
   include UffizziCore::ControllerStubSupport
+  include UffizziCore::DockerHubStubSupport
   include UffizziCore::FixtureSupport
 
   setup do
