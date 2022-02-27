@@ -99,7 +99,11 @@ FactoryBot.define do
   end
 
   sequence :subdomain_name do |_n|
-    Generators.generate_random_subdomain_name
+    Faker::Lorem
+    .words(number: 2, supplemental: true)
+    .join('-')
+    .delete(',. ')
+    .downcase
   end
 
   sequence :created_at, aliases: ['updated_at'] do
