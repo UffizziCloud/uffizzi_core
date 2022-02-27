@@ -6,10 +6,12 @@ require 'uffizzi_core/engine'
 require 'aasm'
 require 'active_model_serializers'
 require 'ancestry'
+require 'google/cloud/dns'
 require 'enumerize'
 require 'pg'
 require 'responders'
 require 'rolify'
+require 'sidekiq'
 require 'virtus'
 
 module UffizziCore

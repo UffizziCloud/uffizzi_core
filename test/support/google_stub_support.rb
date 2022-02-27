@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'google-cloud-dns'
-
 module UffizziCore::GoogleStubSupport
   def google_dns_stub
     Google::Cloud::Dns.stub_new do |*args|
