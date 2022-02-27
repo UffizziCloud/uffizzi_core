@@ -38,6 +38,7 @@ class ActiveSupport::TestCase
   include Minitest::Hooks
   include ActiveModel::Validations
   include UffizziCore::AuthManagement
+  include UffizziCore::GoogleStubSupport
 
   setup do
     @routes = UffizziCore::Engine.routes
