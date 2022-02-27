@@ -96,7 +96,7 @@ class UffizziCore::Api::Cli::V1::Projects::DeploymentsController < UffizziCore::
         project: resource_project,
         user: current_user,
         compose_file_params: compose_file_params,
-        dependencies: dependencies_params[:dependencies] || []
+        dependencies: dependencies_params[:dependencies] || [],
       }
 
       kind = UffizziCore::ComposeFile.kind.temporary

@@ -28,7 +28,7 @@ class UffizziCore::ContainerService
     def defines_env?(container, name)
       return false if container.variables.nil?
 
-      container.variables.select { |v| v["name"].downcase.to_sym == name.to_sym }.any?
+      container.variables.select { |v| v['name'].downcase.to_sym == name.to_sym }.any?
     end
 
     def continuously_deploy_enabled?(container)

@@ -11,35 +11,20 @@ module UffizziCore::DeploymentService
   }.freeze
 
   class << self
-    def create(project, user, attributes)
-      deployment_form = UffiizziCore::Deployment::CreateForm.new(attributes)
-      deployment_form.assign_dependences!(project, user)
-
-      if deployment_form.save
-        update_subdomain!(deployment_form)
-
-        UffiizziCore::Deployment::CreateJob.perform_async(deployment_form.id)
-        UffiizziCore::Deployment::CreateDnsRecordJob.perform_async(deployment_form.id)
-        UffiizziCore::Deployment::CreateWebhooksJob.perform_async(deployment_form.id)
-      end
-
-      deployment_form
-    end
-
     def create_from_compose(compose_file, project, user)
       deployment_attributes = ActionController::Parameters.new(compose_file.template.payload)
 
-      deployment_form = UffiizziCore::Deployment::CreateForm.new(deployment_attributes)
+      deployment_form = UffizziCore::Api::Cli::V1::Deployment::CreateForm.new(deployment_attributes)
       deployment_form.assign_dependences!(project, user)
       deployment_form.compose_file = compose_file
-      deployment_form.creation_source = UffiizziCore::Deployment.creation_source.compose_file_manual
+      deployment_form.creation_source = UffizziCore::Deployment.creation_source.compose_file_manual
 
       if deployment_form.save
         update_subdomain!(deployment_form)
 
-        UffiizziCore::Deployment::CreateJob.perform_async(deployment_form.id)
-        UffiizziCore::Deployment::CreateDnsRecordJob.perform_async(deployment_form.id)
-        UffiizziCore::Deployment::CreateWebhooksJob.perform_async(deployment_form.id)
+        UffizziCore::Deployment::CreateJob.perform_async(deployment_form.id)
+        UffizziCore::Deployment::CreateDnsRecordJob.perform_async(deployment_form.id)
+        UffizziCore::Deployment::CreateWebhooksJob.perform_async(deployment_form.id)
       end
 
       deployment_form
@@ -62,7 +47,7 @@ module UffizziCore::DeploymentService
         containers = deployment.active_containers
         containers = add_default_deployment_variables!(containers)
 
-        UffiizziCore::ControllerService.deploy_containers(deployment, containers)
+        UffizziCore::ControllerService.deploy_containers(deployment, containers)
       else
         Rails.logger.info("DEPLOYMENT_PROCESS deployment_id=#{deployment.id} deployment has builds errors, stopping")
       end
@@ -80,8 +65,8 @@ module UffizziCore::DeploymentService
       if deployment.continuous_preview_payload.present?
         continuous_preview_payload = deployment.continuous_preview_payload
 
-        return build_pull_request_subdomain(deployment) if continuous_preview_payload["pull_request"].present?
-        return build_docker_continuous_preview_subdomain(deployment) if continuous_preview_payload["docker"].present?
+        return build_pull_request_subdomain(deployment) if continuous_preview_payload['pull_request'].present?
+        return build_docker_continuous_preview_subdomain(deployment) if continuous_preview_payload['docker'].present?
       end
 
       build_default_subdomain(deployment)
@@ -90,8 +75,8 @@ module UffizziCore::DeploymentService
     def build_pull_request_subdomain(deployment)
       project = deployment.project
       continuous_preview_payload = deployment.continuous_preview_payload
-      pull_request_payload = continuous_preview_payload["pull_request"]
-      repo_name = pull_request_payload["repository_full_name"].split('/').last
+      pull_request_payload = continuous_preview_payload['pull_request']
+      repo_name = pull_request_payload['repository_full_name'].split('/').last
       deployment_name = name(deployment)
 
       "pr#{pull_request_payload['id']}-#{deployment_name}.#{repo_name}.#{project.slug}"
@@ -100,8 +85,8 @@ module UffizziCore::DeploymentService
     def build_docker_continuous_preview_subdomain(deployment)
       project = deployment.project
       continuous_preview_payload = deployment.continuous_preview_payload
-      docker_payload = continuous_preview_payload["docker"]
-      repo_name = docker_payload["image"].split("/").last.gsub('_', '-')
+      docker_payload = continuous_preview_payload['docker']
+      repo_name = docker_payload['image'].split('/').last.gsub('_', '-')
       image_tag = docker_payload['tag'].gsub('_', '-')
       deployment_name = name(deployment)
 
@@ -167,7 +152,7 @@ module UffizziCore::DeploymentService
 
       containers = deployment.containers.active
 
-      UffiizziCore::Container.transaction do
+      UffizziCore::Container.transaction do
         containers.update_all(receive_incoming_requests: false, port: nil, public: false)
         containers.find(ingress_container.id).update!(port: port, public: true, receive_incoming_requests: true)
       end
@@ -179,11 +164,11 @@ module UffizziCore::DeploymentService
       if new_deployment_subdomain != old_deployment_subdomain
         deployment.update(subdomain: new_deployment_subdomain)
 
-        UffiizziCore::Deployment::CreateDnsRecordJob.perform_async(deployment.id)
-        UffiizziCore::Deployment::DeleteDnsRecordJob.perform_async(old_preview_url)
+        UffizziCore::Deployment::CreateDnsRecordJob.perform_async(deployment.id)
+        UffizziCore::Deployment::DeleteDnsRecordJob.perform_async(old_preview_url)
       end
 
-      UffiizziCore::Deployment::DeployContainersJob.perform_async(deployment.id)
+      UffizziCore::Deployment::DeployContainersJob.perform_async(deployment.id)
     end
 
     def name(deployment)
@@ -204,7 +189,7 @@ module UffizziCore::DeploymentService
         return
       end
 
-      accounts = UffiizziCore::DockerHubService.accounts(credential)
+      accounts = UffizziCore::DockerHubService.accounts(credential)
 
       deployment.containers.with_docker_hub_repo.find_each do |container|
         if !accounts.include?(container.repo.namespace)
@@ -212,12 +197,12 @@ module UffizziCore::DeploymentService
           next
         end
 
-        UffiizziCore::Credential::DockerHub::CreateWebhookJob.perform_async(credential.id, container.image, deployment.id)
+        UffizziCore::Credential::DockerHub::CreateWebhookJob.perform_async(credential.id, container.image, deployment.id)
       end
     end
 
     def pull_request_payload_present?(deployment)
-      deployment.continuous_preview_payload.present? && deployment.continuous_preview_payload["pull_request"].present?
+      deployment.continuous_preview_payload.present? && deployment.continuous_preview_payload['pull_request'].present?
     end
 
     def failed?(deployment)
@@ -244,27 +229,27 @@ module UffizziCore::DeploymentService
       deployment.active_containers.each do |container|
         repo = container.repo
         activity_item = case repo.type
-                        when UffiizziCore::Repo::Github.name
+                        when UffizziCore::Repo::Github.name
                           ActivityItemService.create_github_item!(repo, container)
                         else
                           ActivityItemService.create_docker_item!(repo, container)
-                        end
+        end
 
         create_default_activity_item_event(activity_item)
 
-        UffiizziCore::ActivityItem::Docker::UpdateDigestJob.perform_async(activity_item.id) if RepoService.credential(repo).present? && activity_item.docker?
-        UffiizziCore::Deployment::ManageDeployActivityItemJob.perform_in(5.seconds, activity_item.id)
+        UffizziCore::ActivityItem::Docker::UpdateDigestJob.perform_async(activity_item.id) if RepoService.credential(repo).present? && activity_item.docker?
+        UffizziCore::Deployment::ManageDeployActivityItemJob.perform_in(5.seconds, activity_item.id)
       end
     end
 
     def create_default_activity_item_event(activity_item)
-      activity_item.events.create(state: UffiizziCore::Event.state.building) if activity_item.github?
-      activity_item.events.create(state: UffiizziCore::Event.state.deploying) if activity_item.docker?
+      activity_item.events.create(state: UffizziCore::Event.state.building) if activity_item.github?
+      activity_item.events.create(state: UffizziCore::Event.state.deploying) if activity_item.docker?
     end
 
     def run_github_containers_build_process(deployment)
       deployment.active_containers.with_github_repo.each do |container|
-        UffiizziCore::Repo::QueueBuildJob.perform_async(container.repo.id)
+        UffizziCore::Repo::QueueBuildJob.perform_async(container.repo.id)
       end
     end
 
@@ -284,8 +269,8 @@ module UffizziCore::DeploymentService
     def add_default_deployment_variables!(containers)
       containers.each do |container|
         envs = []
-        if container.port.present? && !UffiizziCore::ContainerService.defines_env?(container, "PORT")
-          envs.push("name" => "PORT", "value" => container.target_port.to_s)
+        if container.port.present? && !UffizziCore::ContainerService.defines_env?(container, 'PORT')
+          envs.push('name' => 'PORT', 'value' => container.target_port.to_s)
         end
 
         container.variables = [] if container.variables.nil?

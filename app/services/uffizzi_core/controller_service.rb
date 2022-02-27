@@ -34,8 +34,12 @@ module UffizziCore::ControllerService
     end
 
     def deploy_containers(deployment, containers)
-      containers = containers.map { |container| UffizziCore::Controller::DeployContainers::ContainerSerializer.new(container).as_json(include: "**") }
-      credentials = deployment.credentials.deployable.map { |credential| UffizziCore::Controller::DeployContainers::CredentialSerializer.new(credential).as_json }
+      containers = containers.map do |container|
+        UffizziCore::Controller::DeployContainers::ContainerSerializer.new(container).as_json(include: '**')
+      end
+      credentials = deployment.credentials.deployable.map do |credential|
+        UffizziCore::Controller::DeployContainers::CredentialSerializer.new(credential).as_json
+      end
 
       body = {
         containers: containers,

@@ -23,7 +23,6 @@ FactoryBot.reload
 WebMock.disable_net_connect!
 Sidekiq::Testing.inline!
 
-
 # Load fixtures from the engine
 if ActiveSupport::TestCase.respond_to?(:fixture_path=)
   ActiveSupport::TestCase.fixture_path = File.expand_path('fixtures', __dir__)
@@ -43,6 +42,7 @@ class ActiveSupport::TestCase
   include UffizziCore::AuthManagement
   include UffizziCore::GoogleStubSupport
   include UffizziCore::ControllerStubSupport
+  include UffizziCore::FixtureSupport
 
   setup do
     @routes = UffizziCore::Engine.routes

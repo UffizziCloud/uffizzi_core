@@ -2,7 +2,7 @@
 
 module UffizziCore::GoogleStubSupport
   def google_dns_stub
-    Google::Cloud::Dns.stub_new do |*args|
+    Google::Cloud::Dns.stub_new do |*_args|
       credentials = OpenStruct.new(client: OpenStruct.new(updater_proc: Proc.new {}))
       dns = Google::Cloud::Dns::Project.new(Google::Cloud::Dns::Service.new(generate(:string), credentials))
 

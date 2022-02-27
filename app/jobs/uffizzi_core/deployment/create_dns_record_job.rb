@@ -8,6 +8,6 @@ class UffizziCore::Deployment::CreateDnsRecordJob < UffizziCore::ApplicationJob
 
     deployment = UffizziCore::Deployment.find(deployment_id)
 
-    GoogleCloud::DnsService.create_dns_record(deployment)
+    UffizziCore::GoogleCloud::DnsService.create_dns_record(deployment)
   end
 end
