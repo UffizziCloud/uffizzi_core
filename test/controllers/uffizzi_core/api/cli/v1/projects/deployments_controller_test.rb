@@ -13,14 +13,14 @@ class UffizziCore::Api::Cli::V1::Projects::DeploymentsControllerTest < ActionCon
     @credential = create(:credential, :github, :active, account: @account, provider_ref: generate(:number))
 
     image = generate(:image)
-    image_namespace, image_name = image.split("/")
+    image_namespace, image_name = image.split('/')
     target_branch = generate(:branch)
     repo_attributes = attributes_for(
       :repo,
       :github,
       namespace: image_namespace,
       name: image_name,
-      branch: target_branch
+      branch: target_branch,
     )
 
     container_attributes = attributes_for(
@@ -34,13 +34,15 @@ class UffizziCore::Api::Cli::V1::Projects::DeploymentsControllerTest < ActionCon
     template_payload = {
       containers_attributes: [container_attributes],
     }
-    @template = create(:template, :compose_file_source, compose_file: @compose_file, project: @project, added_by: @admin, payload: template_payload)
+    @template = create(:template, :compose_file_source, compose_file: @compose_file, project: @project, added_by: @admin,
+                                                        payload: template_payload)
 
     sign_in @admin
   end
 
   test '#index' do
-    create(:deployment, project: @project, state: UffizziCore::Deployment::STATE_ACTIVE, creation_source: UffizziCore::Deployment.creation_source.continuous_preview)
+    create(:deployment, project: @project, state: UffizziCore::Deployment::STATE_ACTIVE,
+                        creation_source: UffizziCore::Deployment.creation_source.continuous_preview)
 
     params = { project_slug: @project.slug }
 
@@ -57,94 +59,94 @@ class UffizziCore::Api::Cli::V1::Projects::DeploymentsControllerTest < ActionCon
     assert_response :success
   end
 
-  # test '#create - from the existing compose file' do
-  #   google_dns_stub
-  #   GoogleCloudDnsClient.any_instance.stubs(:create_dns_record).returns(true)
+  test '#create - from the existing compose file' do
+    google_dns_stub
+    UffizziCore::GoogleCloudDnsClient.any_instance.stubs(:create_dns_record).returns(true)
 
-  #   create_deployment_request = stub_controller_create_deployment_request
-  #   ingresses_data = json_fixture('files/controller/gke_ingress_service.json')
-  #   stub_ingresses_request = stub_controller_ingresses_request(ingresses_data)
+    create_deployment_request = stub_controller_create_deployment_request
+    ingresses_data = json_fixture('files/controller/gke_ingress_service.json')
+    stub_ingresses_request = stub_controller_ingresses_request(ingresses_data)
 
-  #   create(:credential, :github, account: @admin.organizational_account)
-  #   compose_file = create(:compose_file, project: @project, added_by: @admin)
-  #   image = generate(:image)
-  #   image_namespace, image_name = image.split("/")
-  #   target_branch = generate(:branch)
-  #   repo_attributes = attributes_for(
-  #     :repo,
-  #     :github,
-  #     namespace: image_namespace,
-  #     name: image_name,
-  #     branch: target_branch
-  #   )
-  #   container_attributes = attributes_for(
-  #     :container,
-  #     :with_public_port,
-  #     image: image,
-  #     tag: target_branch,
-  #     receive_incoming_requests: true,
-  #     repo_attributes: repo_attributes,
-  #   )
-  #   template_payload = {
-  #     containers_attributes: [container_attributes],
-  #   }
-  #   create(:template, :compose_file_source, compose_file: compose_file, project: @project, added_by: @admin, payload: template_payload)
+    create(:credential, :github, account: @admin.organizational_account)
+    compose_file = create(:compose_file, project: @project, added_by: @admin)
+    image = generate(:image)
+    image_namespace, image_name = image.split('/')
+    target_branch = generate(:branch)
+    repo_attributes = attributes_for(
+      :repo,
+      :github,
+      namespace: image_namespace,
+      name: image_name,
+      branch: target_branch,
+    )
+    container_attributes = attributes_for(
+      :container,
+      :with_public_port,
+      image: image,
+      tag: target_branch,
+      receive_incoming_requests: true,
+      repo_attributes: repo_attributes,
+    )
+    template_payload = {
+      containers_attributes: [container_attributes],
+    }
+    create(:template, :compose_file_source, compose_file: compose_file, project: @project, added_by: @admin, payload: template_payload)
 
-  #   params = { project_slug: @project.slug, compose_file: {}, dependencies: [] }
+    params = { project_slug: @project.slug, compose_file: {}, dependencies: [] }
 
-  #   differences = {
-  #     -> { Deployment.active.count } => 1,
-  #     -> { Repo::Github.count } => 1,
-  #   }
+    differences = {
+      -> { UffizziCore::Deployment.active.count } => 1,
+      -> { UffizziCore::Repo::Github.count } => 1,
+    }
 
-  #   assert_difference differences do
-  #     post :create, params: params, format: :json
-  #   end
+    assert_difference differences do
+      post :create, params: params, format: :json
+    end
 
-  #   assert_response :success
-  #   assert_requested(create_deployment_request)
-  #   assert_requested(stub_ingresses_request)
-  # end
+    assert_response :success
+    assert_requested(create_deployment_request)
+    assert_requested(stub_ingresses_request)
+  end
 
-  # test '#create - from the existing compose file - when the file is invalid' do
-  #   create(:credential, :github, account: @admin.organizational_account)
-  #   compose_file = create(:compose_file, :invalid_file, project: @project, added_by: @admin)
-  #   image = generate(:image)
-  #   image_namespace, image_name = image.split("/")
-  #   target_branch = generate(:branch)
-  #   repo_attributes = attributes_for(
-  #     :repo,
-  #     :github,
-  #     namespace: image_namespace,
-  #     name: image_name,
-  #     branch: target_branch
-  #   )
-  #   container_attributes = attributes_for(
-  #     :container,
-  #     :with_public_port,
-  #     image: image,
-  #     tag: target_branch,
-  #     receive_incoming_requests: true,
-  #     repo_attributes: repo_attributes,
-  #   )
-  #   template_payload = {
-  #     containers_attributes: [container_attributes],
-  #   }
-  #   create(:template, :compose_file_source, compose_file: compose_file, project: @project, added_by: @admin, payload: template_payload)
+  test '#create - from the existing compose file - when the file is invalid' do
+    create(:credential, :github, account: @admin.organizational_account)
+    compose_file = create(:compose_file, :invalid_file, project: @project, added_by: @admin)
+    image = generate(:image)
+    image_namespace, image_name = image.split('/')
+    target_branch = generate(:branch)
+    repo_attributes = attributes_for(
+      :repo,
+      :github,
+      namespace: image_namespace,
+      name: image_name,
+      branch: target_branch,
+    )
+    container_attributes = attributes_for(
+      :container,
+      :with_public_port,
+      image: image,
+      tag: target_branch,
+      receive_incoming_requests: true,
+      repo_attributes: repo_attributes,
+    )
+    template_payload = {
+      containers_attributes: [container_attributes],
+    }
+    create(:template, :compose_file_source, compose_file: compose_file, project: @project, added_by: @admin, payload: template_payload)
 
-  #   params = { project_slug: @project.slug, compose_file: {}, dependencies: [] }
+    params = { project_slug: @project.slug, compose_file: {}, dependencies: [] }
 
-  #   differences = {
-  #     -> { Deployment.active.count } => 0,
-  #     -> { Repo::Github.count } => 0,
-  #   }
+    differences = {
+      -> { UffizziCore::Deployment.active.count } => 0,
+      -> { UffizziCore::Repo::Github.count } => 0,
+    }
 
-  #   assert_difference differences do
-  #     post :create, params: params, format: :json
-  #   end
+    assert_difference differences do
+      post :create, params: params, format: :json
+    end
 
-  #   assert_response :unprocessable_entity
-  # end
+    assert_response :unprocessable_entity
+  end
 
   # test '#create - from an alternative compose file when compose file does not exist' do
   #   google_dns_stub
@@ -221,7 +223,7 @@ class UffizziCore::Api::Cli::V1::Projects::DeploymentsControllerTest < ActionCon
     params = {
       project_slug: @project.slug,
       compose_file: {},
-      dependencies: []
+      dependencies: [],
     }
 
     differences = {

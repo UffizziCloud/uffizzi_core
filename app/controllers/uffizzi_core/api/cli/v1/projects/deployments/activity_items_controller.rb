@@ -13,12 +13,12 @@ class UffizziCore::Api::Cli::V1::Projects::Deployments::ActivityItemsController 
   # @response 404 Not found
   def index
     activity_items = resource_deployment
-                     .activity_items
-                     .page(page)
-                     .per(per_page)
-                     .order(updated_at: :desc)
-                     .ransack(q_param)
-                     .result
+      .activity_items
+      .page(page)
+      .per(per_page)
+      .order(updated_at: :desc)
+      .ransack(q_param)
+      .result
 
     meta = meta(activity_items)
     activity_items = activity_items.map { |activity_item| ActivityItemSerializer.new(activity_item).as_json }

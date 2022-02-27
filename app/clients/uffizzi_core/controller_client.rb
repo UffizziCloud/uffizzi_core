@@ -32,7 +32,7 @@ class UffizziCore::ControllerClient
   end
 
   def ingress_service
-    get("/default_ingress/service")
+    get('/default_ingress/service')
   end
 
   def deploy_containers(deployment_id:, body:)
@@ -52,7 +52,7 @@ class UffizziCore::ControllerClient
   end
 
   def nodes
-    get("/nodes")
+    get('/nodes')
   end
 
   def apply_credential(deployment_id:, body:)
@@ -69,16 +69,17 @@ class UffizziCore::ControllerClient
       begin_at: begin_at,
       end_at: end_at,
     }
-    get("/deployments/usage_metrics/containers", query_params)
+    get('/deployments/usage_metrics/containers', query_params)
   end
 
   private
 
   def get(url, params = {})
     response = connection.get(url, params)
-    body = response.body
-    underscored_body = Converters.deep_underscore_keys(body)
-    RequestResult.quiet.new code: response.status, result: underscored_body
+    body = JSON.parse(response.body)
+    underscored_body = UffizziCore::Converters.deep_underscore_keys(body)
+
+    RequestResult.quiet.new(code: response.status, result: underscored_body)
   end
 
   def build_connection
@@ -89,17 +90,17 @@ class UffizziCore::ControllerClient
     connection = controller.connection
     handled_exceptions = Faraday::Request::Retry::DEFAULT_EXCEPTIONS + [Faraday::ConnectionFailed]
 
-    Faraday.new url do |conn|
+    Faraday.new(url) do |conn|
       conn.options.timeout = connection.timeout
       conn.options.open_timeout = connection.open_timeout
       conn.basic_auth(login, password)
-      conn.request :json
-      conn.request :retry,
+      conn.request(:json)
+      conn.request(:retry,
                    max: connection.retires_count,
                    interval: connection.next_retry_timeout_seconds,
-                   exceptions: handled_exceptions
-      conn.response :json
-      conn.adapter Faraday.default_adapter
+                   exceptions: handled_exceptions)
+      conn.response(:json)
+      conn.adapter(Faraday.default_adapter)
     end
   end
 end

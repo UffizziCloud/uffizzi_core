@@ -100,10 +100,10 @@ FactoryBot.define do
 
   sequence :subdomain_name do |_n|
     Faker::Lorem
-    .words(number: 2, supplemental: true)
-    .join('-')
-    .delete(',. ')
-    .downcase
+      .words(number: 2, supplemental: true)
+      .join('-')
+      .delete(',. ')
+      .downcase
   end
 
   sequence :created_at, aliases: ['updated_at'] do
