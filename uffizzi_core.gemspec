@@ -27,6 +27,9 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'activesupport', '~> 6.1.0'
   spec.add_dependency 'ancestry'
   spec.add_dependency 'dotenv'
+  spec.add_dependency 'faraday_curl'
+  spec.add_dependency 'faraday_middleware'
+  spec.add_dependency 'google-cloud-build'
   spec.add_dependency 'google-cloud-dns'
   spec.add_dependency 'enumerize'
   spec.add_dependency 'octokit'
@@ -36,6 +39,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'rolify'
   spec.add_dependency 'rswag-api'
   spec.add_dependency 'rswag-ui'
+  spec.add_dependency 'sidekiq'
   spec.add_dependency 'virtus'
 
   spec.add_development_dependency 'awesome_print'

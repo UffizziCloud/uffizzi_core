@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class UffizziCore::Deployment::CreateDnsRecordJob < ApplicationJob
+class UffizziCore::Deployment::CreateDnsRecordJob < UffizziCore::ApplicationJob
   sidekiq_options queue: :deployments, retry: 5
 
   def perform(deployment_id)

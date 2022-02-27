@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class UffizziCore::Deployment::DeleteJob < ApplicationJob
+class UffizziCore::Deployment::DeleteJob < UffizziCore::ApplicationJob
   sidekiq_options queue: :deployments, retry: 5
 
   def perform(id)

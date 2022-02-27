@@ -217,24 +217,24 @@ class UffizziCore::Api::Cli::V1::Projects::DeploymentsControllerTest < ActionCon
   #   assert_response :success
   # end
 
-  # test '#create - when compose file does not exist and no params given' do
-  #   params = {
-  #     project_slug: @project.slug,
-  #     compose_file: {},
-  #     dependencies: []
-  #   }
+  test '#create - when compose file does not exist and no params given' do
+    params = {
+      project_slug: @project.slug,
+      compose_file: {},
+      dependencies: []
+    }
 
-  #   differences = {
-  #     -> { ComposeFile.temporary.count } => 0,
-  #     -> { Template.with_creation_source(Template.creation_source.compose_file).count } => 0,
-  #   }
+    differences = {
+      -> { UffizziCore::ComposeFile.temporary.count } => 0,
+      -> { UffizziCore::Template.with_creation_source(UffizziCore::Template.creation_source.compose_file).count } => 0,
+    }
 
-  #   assert_difference differences do
-  #     post :create, params: params, format: :json
-  #   end
+    assert_difference differences do
+      post :create, params: params, format: :json
+    end
 
-  #   assert_response :not_found
-  # end
+    assert_response :not_found
+  end
 
   # test '#deploy_containers' do
   #   Sidekiq::Worker.clear_all
