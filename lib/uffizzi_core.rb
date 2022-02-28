@@ -10,6 +10,8 @@ require 'enumerize'
 require 'pg'
 require 'responders'
 require 'rolify'
+require 'rswag/api'
+require 'rswag/ui'
 require 'virtus'
 
 module UffizziCore
