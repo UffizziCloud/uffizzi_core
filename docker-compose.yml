@@ -15,7 +15,7 @@ services:
       - GEM_HOME=/bundle_cache
       - GEM_PATH=/bundle_cache
       - DATABASE_HOST=db
-      - DATABASE_USERNAME=postgres
+      - DATABASE_USER=postgres
       - DATABASE_PASSWORD=postgres
       - ALLOWED_HOSTS=core,localhost,localhost:7007,0.0.0.0,0.0.0.0:7007
     ports:
