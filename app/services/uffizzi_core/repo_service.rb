@@ -14,7 +14,7 @@ module UffizziCore::RepoService
 
         {
           available: has_dockerfiles,
-          args: !multiple_dockerfiles ? [] : { name: :dockerfile, type: :select, options: args[:dockerfiles] },
+          args: multiple_dockerfiles ? { name: :dockerfile, type: :select, options: args[:dockerfiles] } : [],
         }
       },
     },
@@ -27,7 +27,7 @@ module UffizziCore::RepoService
 
         {
           available: has_app_runtimes || has_csproj,
-          args: !multiple_app_runtimes ? [] : { name: :dotnetruntimes, type: :select, options: args[:dotnetruntimes] },
+          args: multiple_app_runtimes ? { name: :dotnetruntimes, type: :select, options: args[:dotnetruntimes] } : [],
         }
       },
     },

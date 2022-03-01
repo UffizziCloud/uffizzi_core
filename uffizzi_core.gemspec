@@ -34,6 +34,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'google-cloud-dns'
   spec.add_dependency 'octokit'
   spec.add_dependency 'hashie'
+  spec.add_dependency 'octokit'
   spec.add_dependency 'pg', '>= 0.18', '< 2.0'
   spec.add_dependency 'rails', '~> 6.1.0'
   spec.add_dependency 'responders'
