@@ -15,7 +15,7 @@ class UffizziCore::DockerHubClient
 
   def authentificate
     params = { username: credential.username, password: credential.password }
-    url = BASE_URL + '/v2/users/login/'
+    url = "#{BASE_URL}/v2/users/login/"
     response = connection.post(url, params)
 
     RequestResult.new(result: JSON.parse(response.body))

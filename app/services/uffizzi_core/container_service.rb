@@ -11,16 +11,19 @@ class UffizziCore::ContainerService
     def pod_name(container)
       return container.controller_name if container.controller_name.present?
 
-      formatted_name = container.name
-      formatted_name = "#{UffizziCore::RepoService.image(container.repo)}-#{UffizziCore::RepoService.tag(container.repo)}" if should_build?(container)
+      formatted_name = if should_build?(container)
+        "#{UffizziCore::RepoService.image(container.repo)}-#{UffizziCore::RepoService.tag(container.repo)}"
+      else
+        container.name
+      end
 
       formatted_name.parameterize.gsub('_', '-')
     end
 
     def target_port_value(container)
-      if container.repo&.github? && UffizziCore::RepoService.needs_target_port?(container.repo) && container.public && container.port <= PRIVILEGED_PORT_MAX
-        return UffizziCore::DeploymentService.find_unused_port(container.deployment)
-      end
+      should_find_unused_port = container.repo&.github? && UffizziCore::RepoService.needs_target_port?(container.repo) &&
+        container.public && container.port <= PRIVILEGED_PORT_MAX
+      return UffizziCore::DeploymentService.find_unused_port(container.deployment) if should_find_unused_port
 
       container.port
     end

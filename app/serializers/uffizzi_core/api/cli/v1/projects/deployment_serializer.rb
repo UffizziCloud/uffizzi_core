@@ -53,7 +53,6 @@ class UffizziCore::Api::Cli::V1::Projects::DeploymentSerializer < UffizziCore::B
   end
 
   def ingress_container_state
-    count_activity_items = object.ingress_container&.activity_items&.count
     last_event = object.ingress_container&.activity_items&.last&.events&.last
 
     case last_event&.state
@@ -62,7 +61,12 @@ class UffizziCore::Api::Cli::V1::Projects::DeploymentSerializer < UffizziCore::B
     when UffizziCore::Event.state.failed, UffizziCore::Event.state.timeout, UffizziCore::Event.state.cancelled
       :failed
     else
-      count_activity_items.to_i > 1 ? :updating : :pending
+      state_from_activity_items
     end
+  end
+
+  def state_from_activity_items
+    activity_items_count = object.ingress_container&.activity_items&.count
+    activity_items_count.to_i > 1 ? :updating : :pending
   end
 end

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
-class UffizziCore::Api::Cli::V1::Projects::Deployments::ActivityItemsController < UffizziCore::Api::Cli::V1::Projects::Deployments::ApplicationController
+class UffizziCore::Api::Cli::V1::Projects::Deployments::ActivityItemsController <
+  UffizziCore::Api::Cli::V1::Projects::Deployments::ApplicationController
   # Get the compose file for the project
   #
   # @path [GET] /api/cli/v1/projects/{project_slug}/compose_file

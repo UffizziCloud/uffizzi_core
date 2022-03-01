@@ -25,15 +25,7 @@ class UffizziCore::Controller::DeployContainers::ContainerSerializer < UffizziCo
     case object.repo.type
     when UffizziCore::Repo::Github.name
       UffizziCore::RepoService.image(object.repo)
-    when UffizziCore::Repo::Azure.name
-      registry_host = URI.parse(credential.registry_url).host
-
-      "#{registry_host}/#{object.image}"
-    when UffizziCore::Repo::Google.name
-      registry_host = URI.parse(credential.registry_url).host
-
-      "#{registry_host}/#{object.image}"
-    when UffizziCore::Repo::Amazon.name
+    when UffizziCore::Repo::Google.name, UffizziCore::Repo::Amazon.name, UffizziCore::Repo::Azure.name
       registry_host = URI.parse(credential.registry_url).host
 
       "#{registry_host}/#{object.image}"

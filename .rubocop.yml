@@ -11,6 +11,9 @@ Naming/AccessorMethodName:
   Description: Check the naming of accessor methods for get_/set_.
   Enabled: false
 
+Naming/MethodParameterName:
+  Enabled: false
+
 Style/Alias:
   Description: 'Use alias_method instead of alias.'
   StyleGuide: 'https://github.com/bbatsov/ruby-style-guide#alias-method'
@@ -670,7 +673,9 @@ Style/NumberedParameters:
 Style/NumberedParametersLimit:
   Enabled: true
 Style/OpenStructUse:
-  Enabled: true
+  Enabled: false
+Style/OptionalBooleanParameter:
+  Enabled: false
 Style/QuotedSymbols:
   Enabled: true
 Style/RedundantArgument:
@@ -700,7 +705,7 @@ Minitest/AssertWithExpectedArgument:
 Minitest/LiteralAsActualArgument:
   Enabled: true
 Minitest/MultipleAssertions:
-  Enabled: true
+  Enabled: false
 Minitest/RefuteInDelta:
   Enabled: true
 Minitest/RefuteKindOf:
