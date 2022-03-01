@@ -40,7 +40,7 @@ module UffizziCore::DeploymentService
       case deployment_process_status(deployment)
       when DEPLOYMENT_PROCESS_STATUSES[:building]
         Rails.logger.info("DEPLOYMENT_PROCESS deployment_id=#{deployment.id} repeat deploy_containers")
-        Deployment::DeployContainersJob.perform_in(1.minute, deployment.id, true)
+        UffizziCore::Deployment::DeployContainersJob.perform_in(1.minute, deployment.id, true)
       when DEPLOYMENT_PROCESS_STATUSES[:deploying]
         Rails.logger.info("DEPLOYMENT_PROCESS deployment_id=#{deployment.id} start deploying into controller")
 
@@ -219,8 +219,8 @@ module UffizziCore::DeploymentService
       events = activity_items.map { |activity_item| activity_item.events.order_by_id.last&.state }
       events = events.flatten.uniq
 
-      return DEPLOYMENT_PROCESS_STATUSES[:failed] if events.include?(Event.state.failed)
-      return DEPLOYMENT_PROCESS_STATUSES[:building] if events.include?(Event.state.building)
+      return DEPLOYMENT_PROCESS_STATUSES[:failed] if events.include?(UffizziCore::Event.state.failed)
+      return DEPLOYMENT_PROCESS_STATUSES[:building] if events.include?(UffizziCore::Event.state.building)
 
       DEPLOYMENT_PROCESS_STATUSES[:deploying]
     end

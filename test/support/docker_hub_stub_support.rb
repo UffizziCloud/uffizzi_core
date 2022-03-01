@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 module UffizziCore::DockerHubStubSupport
-  API_URL = 'https://hub.docker.com/v2'.freeze
-  AUTH_URL = 'https://auth.docker.io'.freeze
+  API_URL = 'https://hub.docker.com/v2'
+  AUTH_URL = 'https://auth.docker.io'
 
   def stub_dockerhub_login
     response = { token: 'mytoken' }
@@ -25,7 +25,7 @@ module UffizziCore::DockerHubStubSupport
     url = "https://index.docker.io/v2/#{image}/manifests/#{tag}"
     stub_request(:get, url).to_return(status: 200, body: data[:body].to_json, headers: data[:headers])
   end
-  
+
   def stub_dockerhub_api_tokens(data)
     uri = "#{API_URL}/api_tokens"
 

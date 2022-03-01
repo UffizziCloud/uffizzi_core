@@ -37,14 +37,14 @@ class UffizziCore::ActivityItemService
 
       digest = case repo.type
                when UffizziCore::Repo::DockerHub.name
-                UffizziCore::DockerHubService.digest(credential, activity_item.image, activity_item.tag)
+                 UffizziCore::DockerHubService.digest(credential, activity_item.image, activity_item.tag)
                when UffizziCore::Repo::Azure.name
-                UffizziCore::AzureService.digest(credential, activity_item.image, activity_item.tag)
+                 UffizziCore::AzureService.digest(credential, activity_item.image, activity_item.tag)
                when UffizziCore::Repo::Google.name
-                UffizziCore::GoogleService.digest(credential, activity_item.image, activity_item.tag)
+                 UffizziCore::GoogleService.digest(credential, activity_item.image, activity_item.tag)
                when UffizziCore::Repo::Amazon.name
-                UffizziCore::AmazonService.digest(credential, activity_item.image, activity_item.tag)
-               end
+                 UffizziCore::AmazonService.digest(credential, activity_item.image, activity_item.tag)
+      end
 
       activity_item.update!(digest: digest)
 
@@ -63,11 +63,12 @@ class UffizziCore::ActivityItemService
 
       update_build_data(activity_item) if activity_item.github?
 
-      if status == Event.state.deployed && UffizziCore::DeploymentService.pull_request_payload_present?(deployment)
+      if status == UffizziCore::Event.state.deployed && UffizziCore::DeploymentService.pull_request_payload_present?(deployment)
         UffizziCore::Deployment::SendGithubPreviewMessageJob.perform_async(deployment.id)
       end
 
-      UffizziCore::Deployment::ManageDeployActivityItemJob.perform_in(5.seconds, activity_item.id) if [Event.state.building, Event.state.deploying].include?(status)
+      UffizziCore::Deployment::ManageDeployActivityItemJob.perform_in(5.seconds, activity_item.id) if [UffizziCore::Event.state.building,
+                                                                                                       UffizziCore::Event.state.deploying].include?(status)
     end
 
     private

@@ -3,7 +3,7 @@
 module UffizziCore::DockerHubService
   HOOK_NAME = "Uffizzi Deploy Webhook #{Settings.google.project}"
   HOOK_URL = Settings.app.host + 'api/cli/v1/webhooks/docker_hub'
-  REGISTRY = "registry-1.docker.io"
+  REGISTRY = 'registry-1.docker.io'
 
   class << self
     def create_webhook(credential, image)
@@ -14,9 +14,9 @@ module UffizziCore::DockerHubService
 
       return false if webhooks_response.status != 200
 
-      webhooks = webhooks_response.result["results"]
+      webhooks = webhooks_response.result['results']
 
-      webhook = webhooks.find { |hook| hook["name"] == HOOK_NAME }
+      webhook = webhooks.find { |hook| hook['name'] == HOOK_NAME }
 
       return true if !webhook.nil?
 
@@ -24,7 +24,7 @@ module UffizziCore::DockerHubService
         slug: image,
         name: HOOK_NAME,
         expect_final_callback: false,
-        webhooks: [{ name: HOOK_NAME, hook_url: HOOK_URL, registry: REGISTRY }]
+        webhooks: [{ name: HOOK_NAME, hook_url: HOOK_URL, registry: REGISTRY }],
       }
 
       response = client.create_webhook(params)
@@ -35,7 +35,7 @@ module UffizziCore::DockerHubService
     end
 
     def send_webhook_answer(callback_url)
-      params = { state: 'success', description: "Successfully deployed to Uffizzi" }
+      params = { state: 'success', description: 'Successfully deployed to Uffizzi' }
       public_docker_hub_client.send_webhook_answer(callback_url, params)
     end
 
@@ -53,7 +53,7 @@ module UffizziCore::DockerHubService
         @client = UffizziCore::DockerHubClient.new(credential)
 
         unless @client.authentificated?
-          Rails.logger.warn "broken credentials, DockerHubService credential_id=#{credential.id}"
+          Rails.logger.warn("broken credentials, DockerHubService credential_id=#{credential.id}")
           credential.unauthorize! unless credential.unauthorized?
         end
       end
@@ -65,7 +65,7 @@ module UffizziCore::DockerHubService
       docker_hub_client = UffizziCore::DockerHubClient.new(credential)
       token = docker_hub_client.get_token(image).result.token
       response = docker_hub_client.digest(image: image, tag: tag, token: token)
-      response.headers["docker-content-digest"]
+      response.headers['docker-content-digest']
     end
 
     private
