@@ -11,7 +11,7 @@ class UffizziCore::ManageActivityItemsService
   end
 
   def container_status_item(container)
-    container_status_items.find { |container_statuses| container_statuses[:id] == container.id }
+    container_status_items.detect { |container_statuses| container_statuses[:id] == container.id }
   end
 
   def container_status_items
@@ -67,13 +67,13 @@ class UffizziCore::ManageActivityItemsService
 
   def build_container_status_items(network_connectivities, containers_replicas)
     containers.map do |container|
-      network_connectivity = network_connectivities.find { |item| item[:id] == container.id }
+      network_connectivity = network_connectivities.detect { |item| item[:id] == container.id }
       any_container_is_building = containers_replicas.any? do |container_replicas|
         container_replicas[:items].any? do |item|
           item[:status] == UffizziCore::Event.state.building
         end
       end
-      container_replicas = containers_replicas.find { |item| item[:id] == container.id }
+      container_replicas = containers_replicas.detect { |item| item[:id] == container.id }
 
       {
         id: container.id,
@@ -82,29 +82,34 @@ class UffizziCore::ManageActivityItemsService
     end
   end
 
-  def replicas_contains_status(replicas, status)
+  def replicas_contains_status?(replicas, status)
     replicas.any? { |replica| replica[:status] == status }
   end
 
   def build_container_status(container, network_connectivity, container_replicas, any_container_is_building)
-    if any_container_is_building
-      return UffizziCore::Event.state.building if container.repo.github?
+    return building_container_status(container) if any_container_is_building
 
-      return UffizziCore::Event.state.deploying
-    end
-
-    error = replicas_contains_status(container_replicas[:items], UffizziCore::Event.state.failed)
-    container_is_running = replicas_contains_status(container_replicas[:items], UffizziCore::Event.state.deployed)
+    error = replicas_contains_status?(container_replicas[:items], UffizziCore::Event.state.failed)
+    container_is_running = replicas_contains_status?(container_replicas[:items], UffizziCore::Event.state.deployed)
     deployed = !error && container_is_running
+    return container_status(error, deployed) unless container.public?
 
-    if container.public?
-      network_connectivity[:items].each do |item|
-        status = item[:status].to_sym
-        error ||= status == :failed
-        deployed &&= status == :success
-      end
+    network_connectivity[:items].each do |item|
+      status = item[:status].to_sym
+      error ||= status == :failed
+      deployed &&= status == :success
     end
 
+    container_status(error, deployed)
+  end
+
+  def building_container_status(container)
+    return UffizziCore::Event.state.building if container.repo.github?
+
+    UffizziCore::Event.state.deploying
+  end
+
+  def container_status(error, deployed)
     return UffizziCore::Event.state.failed if error
     return UffizziCore::Event.state.deployed if deployed
 
@@ -142,7 +147,7 @@ class UffizziCore::ManageActivityItemsService
   def pod_container(pod, container)
     pod_name = UffizziCore::ContainerService.pod_name(container)
 
-    pod&.status&.container_statuses&.find { |cs| cs.name.include?(pod_name) }
+    pod&.status&.container_statuses&.detect { |cs| cs.name.include?(pod_name) }
   end
 
   def container_network_connectivities(container)

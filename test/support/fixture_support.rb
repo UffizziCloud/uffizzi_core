@@ -6,8 +6,8 @@ module UffizziCore::FixtureSupport
     File.new(full_path)
   end
 
-  def json_fixture(file_path)
+  def json_fixture(file_path, symbolize_names: true)
     data = file_fixture(file_path).read
-    JSON.parse(data, symbolize_names: true)
+    JSON.parse(data, symbolize_names: symbolize_names)
   end
 end

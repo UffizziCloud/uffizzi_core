@@ -66,9 +66,9 @@ class UffizziCore::ActivityItemService
       if status == UffizziCore::Event.state.deployed && UffizziCore::DeploymentService.pull_request_payload_present?(deployment)
         UffizziCore::Deployment::SendGithubPreviewMessageJob.perform_async(deployment.id)
       end
+      return unless [UffizziCore::Event.state.building, UffizziCore::Event.state.deploying].include?(status)
 
-      UffizziCore::Deployment::ManageDeployActivityItemJob.perform_in(5.seconds, activity_item.id) if [UffizziCore::Event.state.building,
-                                                                                                       UffizziCore::Event.state.deploying].include?(status)
+      UffizziCore::Deployment::ManageDeployActivityItemJob.perform_in(5.seconds, activity_item.id)
     end
 
     private

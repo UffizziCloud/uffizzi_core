@@ -193,7 +193,9 @@ module UffizziCore::DeploymentService
 
       deployment.containers.with_docker_hub_repo.find_each do |container|
         if !accounts.include?(container.repo.namespace)
-          Rails.logger.info("DEPLOYMENT_PROCESS deployment_id=#{deployment.id} no namespace(#{container.repo.namespace}) in accounts(#{accounts.inspect})")
+          logger_message = "DEPLOYMENT_PROCESS deployment_id=#{deployment.id} no namespace(#{container.repo.namespace})
+          in accounts(#{accounts.inspect})"
+          Rails.logger.info(logger_message)
           next
         end
 

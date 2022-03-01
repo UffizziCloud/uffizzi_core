@@ -8,7 +8,9 @@ class UffizziCore::Deployment::ManageDeployActivityItemJob < UffizziCore::Applic
     container = activity_item.container
 
     if container.disabled?
-      Rails.logger.info("DEPLOYMENT_PROCESS deployment_id=#{container.deployment_id} activity_item_id=#{activity_item.id} deployment was disabled stop monitoring")
+      logger_message = "DEPLOYMENT_PROCESS deployment_id=#{container.deployment_id} activity_item_id=#{activity_item.id}
+      deployment was disabled stop monitoring"
+      Rails.logger.info(logger_message)
       return
     end
 

@@ -2,7 +2,7 @@
 
 module UffizziCore::DockerHubService
   HOOK_NAME = "Uffizzi Deploy Webhook #{Settings.google.project}"
-  HOOK_URL = Settings.app.host + 'api/cli/v1/webhooks/docker_hub'
+  HOOK_URL = "#{Settings.app.host}api/cli/v1/webhooks/docker_hub"
   REGISTRY = 'registry-1.docker.io'
 
   class << self
@@ -16,7 +16,7 @@ module UffizziCore::DockerHubService
 
       webhooks = webhooks_response.result['results']
 
-      webhook = webhooks.find { |hook| hook['name'] == HOOK_NAME }
+      webhook = webhooks.detect { |hook| hook['name'] == HOOK_NAME }
 
       return true if !webhook.nil?
 

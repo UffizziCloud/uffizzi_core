@@ -107,7 +107,7 @@ class UffizziCore::Github::CredentialService
     def valid_installation?(credential)
       user_installations = client(credential).user_installations
 
-      installation = user_installations.find do |user_installation|
+      installation = user_installations.detect do |user_installation|
         user_installation[:id].to_s == credential.provider_ref
       end
 

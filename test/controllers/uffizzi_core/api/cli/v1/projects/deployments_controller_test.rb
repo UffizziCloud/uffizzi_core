@@ -243,11 +243,11 @@ class UffizziCore::Api::Cli::V1::Projects::DeploymentsControllerTest < ActionCon
     Sidekiq::Testing.fake!
 
     stub_dockerhub_login
-    repo_1 = create(:repo, :docker_hub, project: @project)
-    repo_2 = create(:repo, :docker_hub, project: @project)
+    repo1 = create(:repo, :docker_hub, project: @project)
+    repo2 = create(:repo, :docker_hub, project: @project)
 
-    create(:container, :with_public_port, deployment: @deployment, repo: repo_1)
-    create(:container, :with_public_port, deployment: @deployment, repo: repo_2)
+    create(:container, :with_public_port, deployment: @deployment, repo: repo1)
+    create(:container, :with_public_port, deployment: @deployment, repo: repo2)
 
     params = { project_slug: @project.slug, id: @deployment.id }
 

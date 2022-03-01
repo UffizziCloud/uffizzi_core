@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'lib/uffizzi_core/version'
-
+# rubocop:disable Metrics/BlockLength
 Gem::Specification.new do |spec|
   spec.name        = 'uffizzi_core'
   spec.version     = UffizziCore::VERSION
@@ -66,3 +66,4 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'swagger_yard'
   spec.add_development_dependency 'webmock'
 end
+# rubocop:enable Metrics/BlockLength
