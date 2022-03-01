@@ -6,7 +6,4 @@ module UffizziCore::UsageRepo
   included do
     scope :by_timestamp, ->(direction = :asc) { order("timestamp #{direction}") }
   end
-
-  class_methods do
-  end
 end
