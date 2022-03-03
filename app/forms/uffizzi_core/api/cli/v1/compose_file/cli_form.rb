@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class UffizziCore::Api::Cli::V1::ComposeFile::GithubForm
+class UffizziCore::Api::Cli::V1::ComposeFile::CliForm
   include UffizziCore::ApplicationFormWithoutActiveRecord
 
   attribute :credential, UffizziCore::Credential
@@ -10,7 +10,6 @@ class UffizziCore::Api::Cli::V1::ComposeFile::GithubForm
   attribute :compose_repositories, Array
   attribute :content, String
 
-  validates :credential, presence: { message: 'Invalid credential: Github' }
   validates :content, presence: true
 
   validate :check_compose_parsed_data, if: -> { errors[:content].empty? }
@@ -19,13 +18,13 @@ class UffizziCore::Api::Cli::V1::ComposeFile::GithubForm
 
   def check_compose_parsed_data
     compose_content = Base64.decode64(content)
-    self.compose_data = UffizziCore::ComposeFileService.parse(compose_content)
+    self.compose_data = UffizziCore::Cli::ComposeFileService.parse(compose_content)
   rescue UffizziCore::ComposeFile::ParseError => e
     errors.add(:content, e.message)
   end
 
   def check_repositories
-    self.compose_repositories = UffizziCore::ComposeFileService.load_repositories(compose_data, credential)
+    self.compose_repositories = UffizziCore::Cli::ComposeFileService.load_repositories(compose_data, credential)
   rescue UffizziCore::ComposeFile::NotFoundError => e
     errors.add(:content, e.message)
   end
@@ -33,10 +32,8 @@ class UffizziCore::Api::Cli::V1::ComposeFile::GithubForm
   def check_branches
     return if compose_repositories.blank?
 
-    UffizziCore::ComposeFileService.check_github_branches(compose_data, compose_repositories, credential)
+    UffizziCore::Cli::ComposeFileService.check_github_branches(compose_data, compose_repositories, credential)
   rescue UffizziCore::ComposeFile::NotFoundError => e
     errors.add(:content, e.message)
   end
-
-  def build_compose_dependencies; end
 end

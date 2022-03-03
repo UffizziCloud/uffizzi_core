@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class UffizziCore::ComposeFileService
+class UffizziCore::ComposeFile::ErrorsService
   class << self
     def has_error?(compose_file, error_code)
       error = compose_file.payload.dig('errors', error_code)

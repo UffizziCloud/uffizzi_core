@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class UffizziCore::ComposeFileService
+class UffizziCore::Cli::ComposeFileService
   class << self
     def create(params, kind)
       compose_file_form = create_compose_form(params, kind)
@@ -17,7 +17,6 @@ class UffizziCore::ComposeFileService
     def parse(compose_content, compose_payload = {})
       compose_data = load_compose_data(compose_content)
       check_config_options_format(compose_data)
-
       configs_data = UffizziCore::ComposeFile::ConfigsOptionsService.parse(compose_data['configs'])
       secrets_data = UffizziCore::ComposeFile::SecretsOptionsService.parse(compose_data['secrets'])
       containers_data = UffizziCore::ComposeFile::ServicesOptionsService.parse(compose_data['services'], configs_data, secrets_data,
@@ -80,15 +79,15 @@ class UffizziCore::ComposeFileService
 
     def process_compose_file(compose_file_form, params)
       credential = compose_file_form.project.account.credentials.github.last
-      compose_file_github_form = create_compose_file_github_form(compose_file_form.content, credential)
-      return [compose_file_form, compose_file_github_form.errors] if compose_file_github_form.invalid?
+      cli_form = create_cli_form(compose_file_form.content, credential)
+      return [compose_file_form, cli_form.errors] if cli_form.invalid?
 
       dependencies = params[:dependencies].to_a
-      compose_data = compose_file_github_form.compose_data
+      compose_data = cli_form.compose_data
       compose_dependencies = build_compose_dependecies(compose_data, compose_file_form.path, dependencies)
-      compose_file_github_form.compose_dependencies = compose_dependencies
+      cli_form.compose_dependencies = compose_dependencies
 
-      persist!(compose_file_form, compose_file_github_form)
+      persist!(compose_file_form, cli_form)
     end
 
     def create_compose_form(params, kind)
@@ -114,12 +113,12 @@ class UffizziCore::ComposeFileService
       compose_file_form
     end
 
-    def create_compose_file_github_form(content, credential)
-      compose_file_github_form = UffizziCore::Api::Cli::V1::ComposeFile::GithubForm.new
-      compose_file_github_form.content = content
-      compose_file_github_form.credential = credential
+    def create_cli_form(content, credential)
+      cli_form = UffizziCore::Api::Cli::V1::ComposeFile::CliForm.new
+      cli_form.content = content
+      cli_form.credential = credential
 
-      compose_file_github_form
+      cli_form
     end
 
     def build_compose_dependecies(compose_data, compose_path, dependencies)
@@ -136,7 +135,7 @@ class UffizziCore::ComposeFileService
       end
     end
 
-    def persist!(compose_file_form, compose_file_github_form)
+    def persist!(compose_file_form, cli_form)
       errors = []
       ActiveRecord::Base.transaction do
         if !compose_file_form.save
@@ -145,12 +144,12 @@ class UffizziCore::ComposeFileService
         end
 
         config_files_service = UffizziCore::ComposeFile::ConfigFilesService.new(compose_file_form)
-        errors = config_files_service.create_config_files(compose_file_github_form.compose_dependencies)
+        errors = config_files_service.create_config_files(cli_form.compose_dependencies)
         raise ActiveRecord::Rollback if errors.present?
 
         project = compose_file_form.project
         user = compose_file_form.added_by
-        template_service = UffizziCore::ComposeFile::TemplateService.new(compose_file_github_form, project, user)
+        template_service = UffizziCore::ComposeFile::TemplateService.new(cli_form, project, user)
         errors = template_service.create_template(compose_file_form)
 
         raise ActiveRecord::Rollback if errors.present?
