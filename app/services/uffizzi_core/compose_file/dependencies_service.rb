@@ -20,12 +20,10 @@ class UffizziCore::ComposeFile::DependenciesService
       return [] unless env_files.present?
 
       env_files.map do |path|
-        params = {
-          type: ENV_FILE_TYPE,
-          path: path,
-          container_name: container[:container_name],
-        }
-        build_file_dependency(params, compose_path, dependencies_params)
+        dependency = dependencies_params.detect { |item| item[:path] == path }
+        source = build_source_path(compose_path, path)
+
+        base_file_params(dependency, container).merge(source: source, type: ENV_FILE_TYPE)
       end
     end
 
@@ -34,20 +32,19 @@ class UffizziCore::ComposeFile::DependenciesService
       return [] unless configs.present?
 
       configs.map do |config|
-        params = {
-          type: CONFIG_TYPE,
-          path: config[:source],
-          container_name: container[:container_name],
-        }
-        build_file_dependency(params, compose_path, dependencies_params)
+        dependency = dependencies_params.detect { |item| item[:path] == config[:source] }
+        source = build_source_path(compose_path, dependency[:path])
+
+        base_file_params(dependency, container).merge(source: source, type: CONFIG_TYPE)
       end
     end
 
-    def build_file_dependency(params, compose_path, dependencies_params)
-      path = params[:path]
-      dependency = dependencies_params.detect { |item| item[:path] == path }
-
-      params.merge(content: dependency['content'], source: build_source_path(compose_path, path))
+    def base_file_params(dependency, container)
+      {
+        content: dependency[:content],
+        path: dependency[:path],
+        container_name: container[:container_name],
+      }
     end
 
     def build_source_path(compose_path, dependency_path)
