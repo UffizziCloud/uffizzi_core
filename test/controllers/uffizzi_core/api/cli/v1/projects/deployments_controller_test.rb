@@ -162,7 +162,8 @@ class UffizziCore::Api::Cli::V1::Projects::DeploymentsControllerTest < ActionCon
   #   compose_container_branch = 'main'
   #   compose_container_repository_id = 358_291_405
   #   github_branch_data = json_fixture('files/github/branches/master.json')
-  #   stubbed_github_branch_request = stub_github_branch_request(compose_container_repository_id, compose_container_branch, github_branch_data)
+  #   stubbed_github_branch_request =
+  #     stub_github_branch_request(compose_container_repository_id, compose_container_branch, github_branch_data)
 
   #   compose_file_attributes = base_attributes.merge(content: content, repository_id: nil)
   #   params = {
@@ -198,7 +199,8 @@ class UffizziCore::Api::Cli::V1::Projects::DeploymentsControllerTest < ActionCon
   #   compose_container_branch = 'main'
   #   compose_container_repository_id = 358_291_405
   #   github_branch_data = json_fixture('files/github/branches/master.json')
-  #   stubbed_github_branch_request = stub_github_branch_request(compose_container_repository_id, compose_container_branch, github_branch_data)
+  #   stubbed_github_branch_request =
+  #     stub_github_branch_request(compose_container_repository_id, compose_container_branch, github_branch_data)
 
   #   compose_file_attributes = base_attributes.merge(content: content, repository_id: nil)
   #   params = {
