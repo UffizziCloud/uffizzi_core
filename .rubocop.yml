@@ -5,6 +5,7 @@ AllCops:
   NewCops: disable
   Exclude:
     - test/dummy/**/*
+    - vendor/**/*
 
 Naming/AccessorMethodName:
   Description: Check the naming of accessor methods for get_/set_.
@@ -579,3 +580,136 @@ Lint/UnderscorePrefixedVariableName:
 Lint/Void:
   Description: 'Possible use of operator/literal/variable in void context.'
   Enabled: false
+
+Gemspec/DateAssignment:
+  Enabled: true
+Gemspec/RequireMFA:
+  Enabled: false
+Layout/LineEndStringConcatenationIndentation:
+  Enabled: true
+Layout/SpaceBeforeBrackets:
+  Enabled: true
+Lint/AmbiguousAssignment:
+  Enabled: true
+Lint/AmbiguousOperatorPrecedence:
+  Enabled: true
+Lint/AmbiguousRange:
+  Enabled: true
+Lint/DeprecatedConstants:
+  Enabled: true
+Lint/DuplicateBranch:
+  Enabled: true
+Lint/DuplicateRegexpCharacterClassElement:
+  Enabled: true
+Lint/EmptyBlock:
+  Enabled: true
+Lint/EmptyClass:
+  Enabled: true
+Lint/EmptyInPattern:
+  Enabled: true
+Lint/IncompatibleIoSelectWithFiberScheduler:
+  Enabled: true
+Lint/LambdaWithoutLiteralBlock:
+  Enabled: true
+Lint/NoReturnInBeginEndBlocks:
+  Enabled: true
+Lint/NumberedParameterAssignment:
+  Enabled: true
+Lint/OrAssignmentToConstant:
+  Enabled: true
+Lint/RedundantDirGlobSort:
+  Enabled: true
+Lint/RequireRelativeSelfPath:
+  Enabled: true
+Lint/SymbolConversion:
+  Enabled: true
+Lint/ToEnumArguments:
+  Enabled: true
+Lint/TripleQuotes:
+  Enabled: true
+Lint/UnexpectedBlockArity:
+  Enabled: true
+Lint/UnmodifiedReduceAccumulator:
+  Enabled: true
+Lint/UselessRuby2Keywords:
+  Enabled: true
+Naming/BlockForwarding:
+  Enabled: true
+Security/IoMethods:
+  Enabled: true
+Style/ArgumentsForwarding:
+  Enabled: true
+Style/CollectionCompact:
+  Enabled: true
+Style/DocumentDynamicEvalDefinition:
+  Enabled: true
+Style/EndlessMethod:
+  Enabled: true
+Style/FileRead:
+  Enabled: true
+Style/FileWrite:
+  Enabled: true
+Style/HashConversion:
+  Enabled: true
+Style/HashExcept:
+  Enabled: true
+Style/IfWithBooleanLiteralBranches:
+  Enabled: true
+Style/InPatternThen:
+  Enabled: true
+Style/MapToHash:
+  Enabled: true
+Style/MultilineInPatternThen:
+  Enabled: true
+Style/NegatedIfElseCondition:
+  Enabled: true
+Style/NilLambda:
+  Enabled: true
+Style/NumberedParameters:
+  Enabled: true
+Style/NumberedParametersLimit:
+  Enabled: true
+Style/OpenStructUse:
+  Enabled: true
+Style/QuotedSymbols:
+  Enabled: true
+Style/RedundantArgument:
+  Enabled: true
+Style/RedundantSelfAssignmentBranch:
+  Enabled: true
+Style/SelectByRegexp:
+  Enabled: true
+Style/StringChars:
+  Enabled: true
+Style/SwapValues:
+  Enabled: true
+Minitest/AssertInDelta:
+  Enabled: true
+Minitest/AssertionInLifecycleHook:
+  Enabled: true
+Minitest/AssertKindOf:
+  Enabled: true
+Minitest/AssertOutput:
+  Enabled: true
+Minitest/AssertPathExists:
+  Enabled: true
+Minitest/AssertSilent:
+  Enabled: true
+Minitest/AssertWithExpectedArgument:
+  Enabled: true
+Minitest/LiteralAsActualArgument:
+  Enabled: true
+Minitest/MultipleAssertions:
+  Enabled: true
+Minitest/RefuteInDelta:
+  Enabled: true
+Minitest/RefuteKindOf:
+  Enabled: true
+Minitest/RefutePathExists:
+  Enabled: true
+Minitest/TestMethodName:
+  Enabled: true
+Minitest/UnreachableAssertion:
+  Enabled: true
+Minitest/UnspecifiedException:
+  Enabled: true
