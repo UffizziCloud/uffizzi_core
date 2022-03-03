@@ -1,0 +1,19 @@
+name: Uffizzi Core CI
+on: [push]
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.0.2
+          bundler-cache: true
+      - name: Run rubocop
+        run: bundle exec rubocop
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run tests
+        run: docker-compose run --rm core bash -c "bundle install && bundle exec rails db:create && bundle exec rails test"
