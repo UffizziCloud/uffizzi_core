@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'lib/uffizzi_core/version'
-
+# rubocop:disable Metrics/BlockLength
 Gem::Specification.new do |spec|
   spec.name        = 'uffizzi_core'
   spec.version     = UffizziCore::VERSION
@@ -28,6 +28,11 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'ancestry'
   spec.add_dependency 'dotenv'
   spec.add_dependency 'enumerize'
+  spec.add_dependency 'faraday_curl'
+  spec.add_dependency 'faraday_middleware'
+  spec.add_dependency 'google-cloud-build'
+  spec.add_dependency 'google-cloud-dns'
+  spec.add_dependency 'hashie'
   spec.add_dependency 'octokit'
   spec.add_dependency 'pg', '>= 0.18', '< 2.0'
   spec.add_dependency 'rails', '~> 6.1.0'
@@ -35,6 +40,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'rolify'
   spec.add_dependency 'rswag-api'
   spec.add_dependency 'rswag-ui'
+  spec.add_dependency 'sidekiq'
   spec.add_dependency 'virtus'
 
   spec.add_development_dependency 'awesome_print'
@@ -59,3 +65,4 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'swagger_yard'
   spec.add_development_dependency 'webmock'
 end
+# rubocop:enable Metrics/BlockLength

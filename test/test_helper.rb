@@ -16,11 +16,13 @@ require 'minitest/hooks/default'
 require 'minitest-power_assert'
 require 'mocha/minitest'
 require 'rails/test_help'
+require 'sidekiq/testing'
 require 'webmock/minitest'
 require 'octokit'
 
 FactoryBot.reload
 WebMock.disable_net_connect!
+Sidekiq::Testing.inline!
 
 # Load fixtures from the engine
 if ActiveSupport::TestCase.respond_to?(:fixture_path=)
@@ -39,8 +41,11 @@ class ActiveSupport::TestCase
   include Minitest::Hooks
   include ActiveModel::Validations
   include UffizziCore::AuthManagement
-  include UffizziCore::FixtureSupport
   include UffizziCore::GithubStubSupport
+  include UffizziCore::GoogleStubSupport
+  include UffizziCore::ControllerStubSupport
+  include UffizziCore::DockerHubStubSupport
+  include UffizziCore::FixtureSupport
 
   setup do
     @routes = UffizziCore::Engine.routes
