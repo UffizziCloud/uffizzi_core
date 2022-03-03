@@ -33,9 +33,9 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'rails', '~> 6.1.0'
   spec.add_dependency 'responders'
   spec.add_dependency 'rolify'
-  spec.add_dependency 'virtus'
   spec.add_dependency 'rswag-api'
   spec.add_dependency 'rswag-ui'
+  spec.add_dependency 'virtus'
 
   spec.add_development_dependency 'awesome_print'
   spec.add_development_dependency 'bcrypt', '~> 3.1.7'

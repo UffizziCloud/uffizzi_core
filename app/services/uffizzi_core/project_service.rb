@@ -7,12 +7,12 @@ module UffizziCore::ProjectService
       return if compose_file.nil?
 
       project.secrets.each do |secret|
-        if UffizziCore::ComposeFileService.has_secret?(compose_file, secret)
-          UffizziCore::ComposeFileService.update_secret!(compose_file, secret)
+        if UffizziCore::Cli::ComposeFileService.has_secret?(compose_file, secret)
+          UffizziCore::Cli::ComposeFileService.update_secret!(compose_file, secret)
         end
       end
 
-      return unless UffizziCore::ComposeFileService.secrets_valid?(compose_file, project.secrets)
+      return unless UffizziCore::Cli::ComposeFileService.secrets_valid?(compose_file, project.secrets)
 
       secrets_error_key = UffizziCore::ComposeFile::ErrorsService::SECRETS_ERROR_KEY
       return unless UffizziCore::ComposeFile::ErrorsService.has_error?(compose_file, secrets_error_key)
@@ -24,10 +24,10 @@ module UffizziCore::ProjectService
     def update_compose_secret_errors(project, secret)
       compose_file = project.compose_file
       return if compose_file.nil?
-      return unless UffizziCore::ComposeFileService.has_secret?(compose_file, secret)
+      return unless UffizziCore::Cli::ComposeFileService.has_secret?(compose_file, secret)
 
       error_message = I18n.t('compose.project_secret_not_found', secret: secret['name'])
-      error = Hash[UffizziCore::ComposeFile::ErrorsService::SECRETS_ERROR_KEY, [error_message]]
+      error = { "#{UffizziCore::ComposeFile::ErrorsService::SECRETS_ERROR_KEY}": [error_message] }
 
       existing_errors = compose_file.payload['errors'].presence || {}
       new_errors = existing_errors.merge(error)
