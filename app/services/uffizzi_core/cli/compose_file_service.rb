@@ -75,6 +75,13 @@ class UffizziCore::Cli::ComposeFileService
       builder.build_attributes(compose_data, compose_dependencies, source)
     end
 
+    def containers_credentials(compose_data, credentials)
+      containers = compose_data[:containers]
+      containers.map do |container|
+        UffizziCore::ComposeFile::ContainerService.valid_credential(container, credentials)
+      end
+    end
+
     private
 
     def process_compose_file(compose_file_form, params)

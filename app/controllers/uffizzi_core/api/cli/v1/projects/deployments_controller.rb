@@ -45,6 +45,9 @@ class UffizziCore::Api::Cli::V1::Projects::DeploymentsController < UffizziCore::
     return render_invalid_file if compose_file.invalid_file?
     return render_errors(errors) if errors.present?
 
+    errors = check_credentials(compose_file)
+    return render_errors(errors) if errors.present?
+
     deployment = UffizziCore::DeploymentService.create_from_compose(compose_file, resource_project, current_user)
 
     respond_with deployment
@@ -108,6 +111,16 @@ class UffizziCore::Api::Cli::V1::Projects::DeploymentsController < UffizziCore::
       errors = []
       [existing_compose_file, errors]
     end
+  end
+
+  def check_credentials(compose_file)
+    credentials = resource_project.account.credentials
+    check_credentials_form = UffizziCore::Api::Cli::V1::ComposeFile::CheckCredentialsForm.new
+    check_credentials_form.compose_file = compose_file
+    check_credentials_form.credentials = credentials
+    return check_credentials_form.errors if check_credentials_form.invalid?
+
+    nil
   end
 
   def deployments
