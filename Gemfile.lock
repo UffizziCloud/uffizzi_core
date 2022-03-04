@@ -10,6 +10,7 @@ PATH
       ancestry
       dotenv
       enumerize
+      faraday
       faraday_curl
       faraday_middleware
       google-cloud-build
