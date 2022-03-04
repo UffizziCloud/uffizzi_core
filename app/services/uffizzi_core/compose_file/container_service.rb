@@ -37,5 +37,28 @@ class UffizziCore::ComposeFile::ContainerService
 
       container
     end
+
+    def credential_for_container(container, credentials)
+      if UffizziCore::ComposeFile::ContainerService.github?(container)
+        detect_credential(credentials, :github)
+      elsif UffizziCore::ComposeFile::ContainerService.azure?(container)
+        detect_credential(credentials, :azure)
+      elsif UffizziCore::ComposeFile::ContainerService.docker_hub?(container)
+        detect_credential(credentials, :docker_hub)
+      elsif UffizziCore::ComposeFile::ContainerService.google?(container)
+        detect_credential(credentials, :google)
+      end
+    end
+
+    def detect_credential(credentials, type)
+      credential = credentials.detect do |item|
+        item.send("#{type}?")
+      end
+
+      error_message = "Invalid credential: #{type}"
+      raise UffizziCore::ComposeFile::CredentialError.new(error_message) if credential.nil?
+
+      credential
+    end
   end
 end

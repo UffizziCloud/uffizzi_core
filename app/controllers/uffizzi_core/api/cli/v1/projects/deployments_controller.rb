@@ -140,6 +140,6 @@ class UffizziCore::Api::Cli::V1::Projects::DeploymentsController < UffizziCore::
   end
 
   def render_invalid_file
-    render json: { errors: { state: [I18n.t('compose.invalid_file')] } }, status: :unprocessable_entity
+    render json: { errors: { state: ['Invalid compose file'] } }, status: :unprocessable_entity
   end
 end

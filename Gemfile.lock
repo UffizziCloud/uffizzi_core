@@ -15,7 +15,6 @@ PATH
       faraday_middleware
       google-cloud-build
       google-cloud-dns
-      octokit
       hashie
       octokit
       pg (>= 0.18, < 2.0)

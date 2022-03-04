@@ -67,8 +67,10 @@ class UffizziCore::Api::Cli::V1::Projects::DeploymentsControllerTest < ActionCon
     ingresses_data = json_fixture('files/controller/gke_ingress_service.json')
     stub_ingresses_request = stub_controller_ingresses_request(ingresses_data)
 
-    create(:credential, :github, account: @admin.organizational_account)
-    compose_file = create(:compose_file, project: @project, added_by: @admin)
+    create(:credential, :docker_hub, account: @admin.organizational_account)
+    file_content = File.read('test/fixtures/files/test-compose-success.yml')
+    encoded_content = Base64.encode64(file_content)
+    compose_file = create(:compose_file, project: @project, added_by: @admin, content: encoded_content)
     image = generate(:image)
     image_namespace, image_name = image.split('/')
     target_branch = generate(:branch)
@@ -116,7 +118,8 @@ class UffizziCore::Api::Cli::V1::Projects::DeploymentsControllerTest < ActionCon
     ingresses_data = json_fixture('files/controller/gke_ingress_service.json')
     stub_ingresses_request = stub_controller_ingresses_request(ingresses_data)
     file_content = File.read('test/fixtures/files/uffizzi-compose-vote-app-docker.yml')
-    compose_file = create(:compose_file, project: @project, added_by: @admin, content: file_content)
+    encoded_content = Base64.encode64(file_content)
+    compose_file = create(:compose_file, project: @project, added_by: @admin, content: encoded_content)
     image = generate(:image)
     image_namespace, image_name = image.split('/')
     target_branch = generate(:branch)
@@ -196,78 +199,78 @@ class UffizziCore::Api::Cli::V1::Projects::DeploymentsControllerTest < ActionCon
     assert_response :unprocessable_entity
   end
 
-  # test '#create - from an alternative compose file when compose file does not exist' do
-  #   google_dns_stub
-  #   GoogleCloudDnsClient.any_instance.stubs(:create_dns_record).returns(true)
+  test '#create - from an alternative compose file when compose file does not exist' do
+    google_dns_stub
+    UffizziCore::GoogleCloudDnsClient.any_instance.stubs(:create_dns_record).returns(true)
 
-  #   create_deployment_request = stub_controller_create_deployment_request
-  #   ingresses_data = json_fixture('files/controller/gke_ingress_service.json')
-  #   stub_ingresses_request = stub_controller_ingresses_request(ingresses_data)
-  #   base_attributes = attributes_for(:compose_file).slice(:source, :path)
-  #   content = json_fixture('files/github/compose_files/hello_world_compose.json').dig(:content)
-  #   repositories_data = json_fixture('files/github/search_repositories.json')
-  #   stub_github_repositories = stub_github_search_repositories_request(repositories_data)
-  #   compose_container_branch = 'main'
-  #   compose_container_repository_id = 358_291_405
-  #   github_branch_data = json_fixture('files/github/branches/master.json')
-  #   stubbed_github_branch_request =
-  #     stub_github_branch_request(compose_container_repository_id, compose_container_branch, github_branch_data)
+    create_deployment_request = stub_controller_create_deployment_request
+    ingresses_data = json_fixture('files/controller/gke_ingress_service.json')
+    stub_ingresses_request = stub_controller_ingresses_request(ingresses_data)
+    base_attributes = attributes_for(:compose_file).slice(:source, :path)
+    content = json_fixture('files/github/compose_files/hello_world_compose.json').dig(:content)
+    repositories_data = json_fixture('files/github/search_repositories.json')
+    stub_github_repositories = stub_github_search_repositories_request(repositories_data)
+    compose_container_branch = 'main'
+    compose_container_repository_id = 358_291_405
+    github_branch_data = json_fixture('files/github/branches/master.json')
+    stubbed_github_branch_request =
+      stub_github_branch_request(compose_container_repository_id, compose_container_branch, github_branch_data)
 
-  #   compose_file_attributes = base_attributes.merge(content: content, repository_id: nil)
-  #   params = {
-  #     project_slug: @project.slug,
-  #     compose_file: compose_file_attributes,
-  #     dependencies: []
-  #   }
+    compose_file_attributes = base_attributes.merge(content: content, repository_id: nil)
+    params = {
+      project_slug: @project.slug,
+      compose_file: compose_file_attributes,
+      dependencies: [],
+    }
 
-  #   differences = {
-  #     -> { ComposeFile.temporary.count } => 1,
-  #     -> { Template.with_creation_source(Template.creation_source.compose_file).count } => 1,
-  #   }
+    differences = {
+      -> { UffizziCore::ComposeFile.temporary.count } => 1,
+      -> { UffizziCore::Template.with_creation_source(UffizziCore::Template.creation_source.compose_file).count } => 1,
+    }
 
-  #   assert_difference differences do
-  #     post :create, params: params, format: :json
-  #   end
+    assert_difference differences do
+      post :create, params: params, format: :json
+    end
 
-  #   assert_response :success
-  # end
+    assert_response :success
+  end
 
-  # test '#create - from an alternative compose file when compose file exists' do
-  #   create(:compose_file, project: @project)
-  #   google_dns_stub
-  #   GoogleCloudDnsClient.any_instance.stubs(:create_dns_record).returns(true)
+  test '#create - from an alternative compose file when compose file exists' do
+    create(:compose_file, project: @project)
+    google_dns_stub
+    UffizziCore::GoogleCloudDnsClient.any_instance.stubs(:create_dns_record).returns(true)
 
-  #   create_deployment_request = stub_controller_create_deployment_request
-  #   ingresses_data = json_fixture('files/controller/gke_ingress_service.json')
-  #   stub_ingresses_request = stub_controller_ingresses_request(ingresses_data)
-  #   base_attributes = attributes_for(:compose_file).slice(:source, :path)
-  #   content = json_fixture('files/github/compose_files/hello_world_compose.json').dig(:content)
-  #   repositories_data = json_fixture('files/github/search_repositories.json')
-  #   stub_github_repositories = stub_github_search_repositories_request(repositories_data)
-  #   compose_container_branch = 'main'
-  #   compose_container_repository_id = 358_291_405
-  #   github_branch_data = json_fixture('files/github/branches/master.json')
-  #   stubbed_github_branch_request =
-  #     stub_github_branch_request(compose_container_repository_id, compose_container_branch, github_branch_data)
+    create_deployment_request = stub_controller_create_deployment_request
+    ingresses_data = json_fixture('files/controller/gke_ingress_service.json')
+    stub_ingresses_request = stub_controller_ingresses_request(ingresses_data)
+    base_attributes = attributes_for(:compose_file).slice(:source, :path)
+    content = json_fixture('files/github/compose_files/hello_world_compose.json').dig(:content)
+    repositories_data = json_fixture('files/github/search_repositories.json')
+    stub_github_repositories = stub_github_search_repositories_request(repositories_data)
+    compose_container_branch = 'main'
+    compose_container_repository_id = 358_291_405
+    github_branch_data = json_fixture('files/github/branches/master.json')
+    stubbed_github_branch_request =
+      stub_github_branch_request(compose_container_repository_id, compose_container_branch, github_branch_data)
 
-  #   compose_file_attributes = base_attributes.merge(content: content, repository_id: nil)
-  #   params = {
-  #     project_slug: @project.slug,
-  #     compose_file: compose_file_attributes,
-  #     dependencies: []
-  #   }
+    compose_file_attributes = base_attributes.merge(content: content, repository_id: nil)
+    params = {
+      project_slug: @project.slug,
+      compose_file: compose_file_attributes,
+      dependencies: [],
+    }
 
-  #   differences = {
-  #     -> { ComposeFile.temporary.count } => 1,
-  #     -> { Template.with_creation_source(Template.creation_source.compose_file).count } => 1,
-  #   }
+    differences = {
+      -> { UffizziCore::ComposeFile.temporary.count } => 1,
+      -> { UffizziCore::Template.with_creation_source(UffizziCore::Template.creation_source.compose_file).count } => 1,
+    }
 
-  #   assert_difference differences do
-  #     post :create, params: params, format: :json
-  #   end
+    assert_difference differences do
+      post :create, params: params, format: :json
+    end
 
-  #   assert_response :success
-  # end
+    assert_response :success
+  end
 
   test '#create - when compose file does not exist and no params given' do
     params = {
