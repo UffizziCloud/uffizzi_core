@@ -2,10 +2,10 @@
 
 # @resource Uffizzi-secrets
 class UffizziCore::Api::Cli::V1::Projects::SecretsController < UffizziCore::Api::Cli::V1::Projects::ApplicationController
-  # Get projects of current user
+  # Get secrets for the project
   #
   # @path [GET] /api/cli/v1/projects/{project_slug}/secrets
-  #
+  # @parameter project_slug(required,path) [string]
   # @response [object<secrets: Array<object<name: string>> >] 200 OK
   # @response 401 Not authorized
   def index
@@ -18,9 +18,8 @@ class UffizziCore::Api::Cli::V1::Projects::SecretsController < UffizziCore::Api:
   # Add secret to project
   #
   # @path [POST] /api/cli/v1/projects/{project_slug}/secrets
-  #
+  # @parameter project_slug(required,path) [string]
   # @parameter secrets(required,body) [Array<object <name: string, value: string>>]
-  #
   # @response [object<secrets: Array<object<name: string>>>] 201 Created
   # @response 401 Not authorized
 
@@ -35,12 +34,10 @@ class UffizziCore::Api::Cli::V1::Projects::SecretsController < UffizziCore::Api:
     render json: { secrets: secrets }, status: :created
   end
 
-  # Delete a secret from project by id
+  # Delete a secret from project by secret id
   #
-  # @path [GET] /api/cli/v1/projects/{project_slug}/secrets/{id}
-  #
-  # @parameter id(required,path) [string]
-  #
+  # @path [DELETE] /api/cli/v1/projects/{project_slug}/secrets/{id}
+  # @parameter project_slug(required,path) [string]
   # @response 204 No Content
   # @response 401 Not authorized
   def destroy
