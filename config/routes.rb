@@ -28,8 +28,10 @@ UffizziCore::Engine.routes.draw do
         end
         resource :session, only: ['create', 'destroy']
 
-        scope module: :account do
-          resources :credentials, only: ['create']
+        resource :account, only: [] do
+          scope module: :account do
+            resources :credentials, only: ['create']
+          end
         end
       end
     end
