@@ -60,12 +60,11 @@ class UffizziCore::Api::Cli::V1::Projects::DeploymentsControllerTest < ActionCon
   end
 
   test '#create - from the existing compose file' do
+    Sidekiq::Worker.clear_all
+    Sidekiq::Testing.fake!
+
     google_dns_stub
     UffizziCore::GoogleCloudDnsClient.any_instance.stubs(:create_dns_record).returns(true)
-
-    create_deployment_request = stub_controller_create_deployment_request
-    ingresses_data = json_fixture('files/controller/gke_ingress_service.json')
-    stub_ingresses_request = stub_controller_ingresses_request(ingresses_data)
 
     create(:credential, :docker_hub, account: @admin.organizational_account)
     file_content = File.read('test/fixtures/files/test-compose-success.yml')
@@ -106,8 +105,9 @@ class UffizziCore::Api::Cli::V1::Projects::DeploymentsControllerTest < ActionCon
     end
 
     assert_response :success
-    assert_requested(create_deployment_request)
-    assert_requested(stub_ingresses_request)
+
+    Sidekiq::Worker.clear_all
+    Sidekiq::Testing.inline!
   end
 
   test '#create - from the existing compose file when credentials are removed' do
@@ -207,7 +207,7 @@ class UffizziCore::Api::Cli::V1::Projects::DeploymentsControllerTest < ActionCon
     ingresses_data = json_fixture('files/controller/gke_ingress_service.json')
     stub_ingresses_request = stub_controller_ingresses_request(ingresses_data)
     base_attributes = attributes_for(:compose_file).slice(:source, :path)
-    content = json_fixture('files/github/compose_files/hello_world_compose.json').dig(:content)
+    content = json_fixture('files/github/compose_files/hello_world_compose.json')[:content]
     repositories_data = json_fixture('files/github/search_repositories.json')
     stub_github_repositories = stub_github_search_repositories_request(repositories_data)
     compose_container_branch = 'main'
@@ -233,6 +233,10 @@ class UffizziCore::Api::Cli::V1::Projects::DeploymentsControllerTest < ActionCon
     end
 
     assert_response :success
+    assert_requested(create_deployment_request)
+    assert_requested(stub_ingresses_request)
+    assert_requested(stub_github_repositories)
+    assert_requested(stubbed_github_branch_request)
   end
 
   test '#create - from an alternative compose file when compose file exists' do
@@ -244,7 +248,7 @@ class UffizziCore::Api::Cli::V1::Projects::DeploymentsControllerTest < ActionCon
     ingresses_data = json_fixture('files/controller/gke_ingress_service.json')
     stub_ingresses_request = stub_controller_ingresses_request(ingresses_data)
     base_attributes = attributes_for(:compose_file).slice(:source, :path)
-    content = json_fixture('files/github/compose_files/hello_world_compose.json').dig(:content)
+    content = json_fixture('files/github/compose_files/hello_world_compose.json')[:content]
     repositories_data = json_fixture('files/github/search_repositories.json')
     stub_github_repositories = stub_github_search_repositories_request(repositories_data)
     compose_container_branch = 'main'
@@ -270,6 +274,10 @@ class UffizziCore::Api::Cli::V1::Projects::DeploymentsControllerTest < ActionCon
     end
 
     assert_response :success
+    assert_requested(create_deployment_request)
+    assert_requested(stub_ingresses_request)
+    assert_requested(stub_github_repositories)
+    assert_requested(stubbed_github_branch_request)
   end
 
   test '#create - when compose file does not exist and no params given' do
