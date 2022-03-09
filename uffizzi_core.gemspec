@@ -26,11 +26,15 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'activerecord',  '~> 6.1.0'
   spec.add_dependency 'activesupport', '~> 6.1.0'
   spec.add_dependency 'ancestry'
+  spec.add_dependency 'dotenv'
   spec.add_dependency 'enumerize'
+  spec.add_dependency 'octokit'
   spec.add_dependency 'pg', '>= 0.18', '< 2.0'
   spec.add_dependency 'rails', '~> 6.1.0'
   spec.add_dependency 'responders'
   spec.add_dependency 'rolify'
+  spec.add_dependency 'rswag-api'
+  spec.add_dependency 'rswag-ui'
   spec.add_dependency 'virtus'
 
   spec.add_development_dependency 'awesome_print'
@@ -52,5 +56,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rubocop'
   spec.add_development_dependency 'rubocop-minitest'
   spec.add_development_dependency 'rubocop-rake'
+  spec.add_development_dependency 'swagger_yard'
   spec.add_development_dependency 'webmock'
 end

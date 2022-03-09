@@ -5,6 +5,7 @@ class UffizziCore::Api::Cli::ApplicationController < ActionController::Base
   include UffizziCore::AuthManagement
 
   protect_from_forgery with: :exception
+  rescue_from ActiveRecord::RecordNotFound, with: :render_not_found
 
   before_action :authenticate_request!
   skip_before_action :verify_authenticity_token
@@ -13,5 +14,9 @@ class UffizziCore::Api::Cli::ApplicationController < ActionController::Base
 
   def self.responder
     UffizziCore::JsonResponder
+  end
+
+  def render_not_found
+    render json: { errors: { title: ['Resource Not Found'] } }, status: :not_found
   end
 end
