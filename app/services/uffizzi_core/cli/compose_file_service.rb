@@ -103,6 +103,19 @@ class UffizziCore::Cli::ComposeFileService
       end
     end
 
+    def containers_credentials(compose_data, credentials)
+      containers = compose_data[:containers]
+      detected_credentials = containers.map do |container|
+        UffizziCore::ComposeFile::ContainerService.credential_for_container(container, credentials)
+      end
+
+      result = []
+      detected_credentials.compact
+        .group_by { |credential| credential[:id] }
+        .each_pair { |_id, value| result << value.first }
+      result
+    end
+
     private
 
     def process_compose_file(compose_file_form, params)
@@ -189,7 +202,7 @@ class UffizziCore::Cli::ComposeFileService
       begin
         compose_data = YAML.safe_load(compose_content)
       rescue Psych::SyntaxError
-        raise UffizziCore::ComposeFile::ParseError, I18n.t('compose.invalid_file')
+        raise UffizziCore::ComposeFile::ParseError, 'Invalid compose file'
       end
 
       raise UffizziCore::ComposeFile::ParseError, I18n.t('compose.unsupported_file') if compose_data.nil?

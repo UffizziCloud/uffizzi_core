@@ -45,6 +45,9 @@ class UffizziCore::Api::Cli::V1::Projects::DeploymentsController < UffizziCore::
     return render_invalid_file if compose_file.invalid_file?
     return render_errors(errors) if errors.present?
 
+    errors = check_credentials(compose_file)
+    return render_errors(errors) if errors.present?
+
     deployment = UffizziCore::DeploymentService.create_from_compose(compose_file, resource_project, current_user)
 
     respond_with deployment
@@ -110,6 +113,16 @@ class UffizziCore::Api::Cli::V1::Projects::DeploymentsController < UffizziCore::
     end
   end
 
+  def check_credentials(compose_file)
+    credentials = resource_project.account.credentials
+    check_credentials_form = UffizziCore::Api::Cli::V1::ComposeFile::CheckCredentialsForm.new
+    check_credentials_form.compose_file = compose_file
+    check_credentials_form.credentials = credentials
+    return check_credentials_form.errors if check_credentials_form.invalid?
+
+    nil
+  end
+
   def deployments
     @deployments ||= resource_project.deployments.active
   end
@@ -127,6 +140,6 @@ class UffizziCore::Api::Cli::V1::Projects::DeploymentsController < UffizziCore::
   end
 
   def render_invalid_file
-    render json: { errors: { state: [I18n.t('compose.invalid_file')] } }, status: :unprocessable_entity
+    render json: { errors: { state: ['Invalid compose file'] } }, status: :unprocessable_entity
   end
 end

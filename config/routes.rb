@@ -9,16 +9,6 @@ UffizziCore::Engine.routes.draw do
   namespace :api, defaults: { format: :json } do
     namespace :cli do
       namespace :v1 do
-        resources :projects, only: ['index'], param: :slug do
-          scope module: :projects do
-            resource :compose_file, only: ['show', 'create', 'destroy']
-            resources :secrets, only: ['index', 'destroy'] do
-              collection do
-                post :bulk_create
-              end
-            end
-          end
-        end
         resource :webhooks, only: [] do
           post :docker_hub
           post :github
@@ -30,10 +20,17 @@ UffizziCore::Engine.routes.draw do
 
         resources :projects, only: ['index'], param: :slug do
           scope module: :projects do
+            resource :compose_file, only: ['show', 'create', 'destroy']
             resources :deployments, only: ['index', 'show', 'create', 'destroy'] do
               post :deploy_containers, on: :member
               scope module: :deployments do
                 resources :activity_items, only: ['index']
+              end
+            end
+
+            resources :secrets, only: ['index', 'destroy'] do
+              collection do
+                post :bulk_create
               end
             end
           end
