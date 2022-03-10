@@ -27,21 +27,12 @@ module UffizziCore::ProjectService
       return unless UffizziCore::ComposeFileService.has_secret?(compose_file, secret)
 
       error_message = I18n.t('compose.project_secret_not_found', secret: secret['name'])
-      error = Hash[UffizziCore::ComposeFile::ErrorsService::SECRETS_ERROR_KEY, [error_message]]
+      error = { UffizziCore::ComposeFile::ErrorsService::SECRETS_ERROR_KEY => [error_message] }
 
       existing_errors = compose_file.payload['errors'].presence || {}
       new_errors = existing_errors.merge(error)
 
       UffizziCore::ComposeFile::ErrorsService.update_compose_errors!(compose_file, new_errors, compose_file.content)
-    end
-
-    def delete_secret(id, project)
-      secret = OpenStruct.new(name: id)
-      project_form = project.becomes(UffizziCore::Api::Cli::V1::Project::UpdateForm)
-      project_form.delete_secret!(secret.name)
-      project_form.save!
-
-      update_compose_secret_errors(project_form, secret)
     end
   end
 end

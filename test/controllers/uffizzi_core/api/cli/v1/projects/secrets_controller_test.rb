@@ -269,4 +269,24 @@ class UffizziCore::Api::Cli::V1::Projects::SecretsControllerTest < ActionControl
     assert { compose_file.invalid_file? }
     refute_empty(compose_file.payload['errors'])
   end
+
+  test '#destroy if a secret doesn\'t exist' do
+    params = {
+      project_slug: @project.slug,
+      id: generate(:string),
+    }
+
+    differences = {
+      -> { UffizziCore::Project.last.secrets.count } => 0,
+    }
+
+    assert_difference differences do
+      delete :destroy, params: params, format: :json
+    end
+
+    assert_response :unprocessable_entity
+
+    response_body = JSON.parse(response.body)
+    refute_empty(response_body['errors']['secret'])
+  end
 end

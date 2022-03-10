@@ -22,7 +22,6 @@ class UffizziCore::Api::Cli::V1::Projects::SecretsController < UffizziCore::Api:
   # @parameter secrets(required,body) [Array<object <name: string, value: string>>]
   # @response [object<secrets: Array<object<name: string>>>] 201 Created
   # @response 401 Not authorized
-
   def bulk_create
     project_form = resource_project.becomes(UffizziCore::Api::Cli::V1::Project::UpdateForm)
     project_form.assign_secrets!(secrets_params)
@@ -42,9 +41,20 @@ class UffizziCore::Api::Cli::V1::Projects::SecretsController < UffizziCore::Api:
   # @response 401 Not authorized
   def destroy
     secret_name = CGI.unescape(params[:id])
-    UffizziCore::ProjectService.delete_secret(secret_name, resource_project)
+    secret = OpenStruct.new(name: secret_name)
+    project_form = resource_project.becomes(UffizziCore::Api::Cli::V1::Project::DeleteSecretForm)
+    project_form.secret = secret
 
-    head :no_content
+    if project_form.invalid?
+      return respond_with project_form
+    end
+
+    project_form.delete_secret!
+    if project_form.save!(validate: false)
+      UffizziCore::ProjectService.update_compose_secret_errors(project_form, secret)
+    end
+
+    respond_with project_form
   end
 
   private

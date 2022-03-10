@@ -16,12 +16,6 @@ class UffizziCore::Api::Cli::V1::Project::UpdateForm < UffizziCore::Project
     self.secrets = existing_secrets.union(new_secrets)
   end
 
-  def delete_secret!(secret_name)
-    existing_secrets = secrets.presence || []
-
-    self.secrets = existing_secrets.reject { |secret| secret['name'] == secret_name }
-  end
-
   private
 
   def check_duplicates

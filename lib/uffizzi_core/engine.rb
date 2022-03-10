@@ -8,6 +8,10 @@ module UffizziCore
 
     config.uffizzi_core = ActiveSupport::OrderedOptions.new
 
+    config.before_initialize do
+      config.i18n.load_path += Dir["#{config.root}/config/locales/**/*.yml"]
+    end
+
     config.uffizzi_core.table_names = {
       accounts: :uffizzi_core_accounts,
       activity_items: :uffizzi_core_activity_items,
