@@ -21,6 +21,7 @@ class UffizziCore::Api::Cli::V1::Projects::SecretsController < UffizziCore::Api:
   # @parameter project_slug(required,path) [string]
   # @parameter secrets(required,body) [Array<object <name: string, value: string>>]
   # @response [object<secrets: Array<object<name: string>>>] 201 Created
+  # @response 422 A compose file already exists for this project
   # @response 401 Not authorized
   def bulk_create
     project_form = resource_project.becomes(UffizziCore::Api::Cli::V1::Project::UpdateForm)
@@ -37,7 +38,8 @@ class UffizziCore::Api::Cli::V1::Projects::SecretsController < UffizziCore::Api:
   #
   # @path [DELETE] /api/cli/v1/projects/{project_slug}/secrets/{id}
   # @parameter project_slug(required,path) [string]
-  # @response 204 No Content
+  # @response [Project] 200 OK
+  # @response 422
   # @response 401 Not authorized
   def destroy
     secret_name = CGI.unescape(params[:id])
