@@ -60,3 +60,7 @@ en:
     project_secret_not_found: Project secret '%{secret}' not found
     continuous_preview_in_service_level: The option '%{option}' is not supported for service-level. Use 'x-uffizzi-continuous-preview' instead
     file_already_exists: A compose file already exists for this project. Run 'uffizzi compose update' to update this file or 'uffizzi compose rm' to remove it. For more options, see 'uffizzi compose --help'"
+  secrets:
+    duplicates_exists: Secret with key %{secrets} already exist.
+    invalid_key_length: A secret key must be no longer than 256 characters.
+
