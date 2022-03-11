@@ -103,5 +103,15 @@ git merge --no-ff FEATURE_NAME
 git push origin qa
 ```
 
+## API Documentation
+
+* [Development](http://0.0.0.0:7007/api-docs/index.html)
+
+Rebuild documentation locally:
+
+```
+bundle exec rake core:generate_docs
+```
+
 ## Contributing
 Bug reports and pull requests are welcome on GitHub at https://github.com/UffizziCloud/uffizzi_core.

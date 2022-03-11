@@ -94,9 +94,5 @@ compose:
   default_tag: latest
   dockerfile_default_path: Dockerfile
   default_branch: 'master'
-features:
-  stripe_enabled: <%= !!ActiveModel::Type::Boolean.new.cast(ENV['STRIPE_ENABLED']) %>
-docker_hub:
-  public_namespace: 'library'
 continuous_preview:
   default_delete_preview_after: 72

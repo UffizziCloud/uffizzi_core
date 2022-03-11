@@ -1,6 +1,19 @@
 # frozen_string_literal: true
 
+# @resource Account/Credential
 class UffizziCore::Api::Cli::V1::Account::CredentialsController < UffizziCore::Api::Cli::V1::Account::ApplicationController
+  # rubocop:disable Metrics/LineLength
+  # Create account credential
+  #
+  # @path [POST] /api/cli/v1/account/credential
+  #
+  # @parameter credential(required,body) [object<username:string, password: string, type:string>]
+  # @response [object<id:integer, username:string, password:string, type:string, state:string>] 201 Created successfully
+  # @response [object<errors>] 422 Unprocessable entity
+  #
+  # @example
+  #    type can be one of UffizziCore::Credential::Amazon, UffizziCore::Credential::Azure, UffizziCore::Credential::DockerHub, UffizziCore::Credential::Google
+  # rubocop:enable Metrics/LineLength
   def create
     credential_form = UffizziCore::Api::Cli::V1::Account::Credential::CreateForm.new
     credential_form.assign_attributes(credential_params)

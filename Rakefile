@@ -18,3 +18,14 @@ Rake::TestTask.new(:test) do |t|
 end
 
 task default: :test
+
+namespace :core do
+  desc 'Generate api docs'
+  task generate_docs: :environment do
+    SwaggerYard.register_custom_yard_tags!
+
+    spec = SwaggerYard::Swagger.new
+
+    File.open('swagger/v1/swagger.json', 'w') { |f| f << JSON.pretty_generate(spec.to_h) }
+  end
+end

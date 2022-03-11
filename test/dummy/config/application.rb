@@ -1,6 +1,5 @@
 require_relative 'boot'
 
-require 'config'
 require 'byebug'
 require 'rack/cors'
 require 'rails/all'

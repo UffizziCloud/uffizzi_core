@@ -21,14 +21,13 @@ class UffizziCore::Api::Cli::V1::Projects::ComposeFilesController < UffizziCore:
   #
   # @parameter project_slug(required,path) [string] The project_slug for the project
   # @parameter params(required,body) [object <
-  # compose_file: object<path: string, source: string, content: string>,
-  # dependencies:  Array<object<path: string, source: string, content: string>>
-  # >]
+  #    compose_file: object<path: string, source: string, content: string>,
+  #    dependencies: Array<object<path: string, source: string, content: string>>>]
+  #
   # @response [ComposeFile] 201 OK
   # @response 422 A compose file already exists for this project
   # @response [ComposeFile] 422 Invalid compose file
   # @response 401 Not authorized
-
   def create
     params = {
       project: resource_project,

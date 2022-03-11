@@ -18,7 +18,7 @@ Gem::Specification.new do |spec|
   spec.metadata['source_code_uri'] = 'https://github.com/UffizziCloud/uffizzi_core'
   spec.metadata['changelog_uri'] = 'https://github.com/UffizziCloud/uffizzi_core/blob/master/CHANGELOG.md'
 
-  spec.files = Dir['{app,config,db,lib}/**/*', 'LICENSE', 'Rakefile', 'README.md']
+  spec.files = Dir['{app,config,db,lib,swagger}/**/*', 'LICENSE', 'Rakefile', 'README.md']
 
   spec.add_dependency 'aasm'
   spec.add_dependency 'actionpack', '~> 6.1.0'

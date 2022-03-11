@@ -33,8 +33,9 @@ class UffizziCore::Api::Cli::V1::Projects::DeploymentsController < UffizziCore::
   # @path [POST] /api/cli/v1/projects/{project_slug}/deployments
   #
   # @parameter project_slug(required,path) [string] The slug for the project
-  # @parameter params(required,body)   [object<compose_file: object<path: string, source: string, content: string>,
-  # dependencies:  Array<object<path: string, source: string, content: string>>>]
+  # @parameter params(required,body)   [object<
+  #    compose_file: object<path: string, source: string, content: string>,
+  #    dependencies: Array<object<path: string, source: string, content: string>>>]
   #
   # @response [Deployment] 201 OK
   # @response [object<errors: object<state: string>>] 422 Unprocessable Entity
