@@ -34,14 +34,5 @@ module UffizziCore::ProjectService
 
       UffizziCore::ComposeFile::ErrorsService.update_compose_errors!(compose_file, new_errors, compose_file.content)
     end
-
-    def delete_secret(id, project)
-      secret = OpenStruct.new(name: id)
-      project_form = project.becomes(UffizziCore::Api::Cli::V1::Project::UpdateForm)
-      project_form.delete_secret!(secret.name)
-      project_form.save!
-
-      update_compose_secret_errors(project_form, secret)
-    end
   end
 end
