@@ -25,7 +25,7 @@ class UffizziCore::ComposeFile::ConfigFilesService
 
   def create_config_file(config_dependency)
     source = UffizziCore::ComposeFile::GithubDependenciesService.build_source_path(@path, config_dependency[:path], @repository_id, @branch)
-    config_file = @project.config_files.find_or_initialize_by(source: source)
+    config_file = @project.config_files.create(source: source)
     attributes = {
       filename: UffizziCore::ComposeFile::GithubDependenciesService.filename(config_dependency),
       payload: UffizziCore::ComposeFile::GithubDependenciesService.content(config_dependency),
