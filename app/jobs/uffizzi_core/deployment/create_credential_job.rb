@@ -22,10 +22,7 @@ class UffizziCore::Deployment::CreateCredentialJob < UffizziCore::ApplicationJob
       return
     end
 
-    unless UffizziCore::ControllerService.deployment_exists?(deployment)
-      raise UffizziCore::DeploymentNotFoundError,
-            deployment_id
-    end
+    raise UffizziCore::DeploymentNotFoundError, deployment_id unless UffizziCore::ControllerService.deployment_exists?(deployment)
 
     UffizziCore::ControllerService.apply_credential(deployment, credential)
   end

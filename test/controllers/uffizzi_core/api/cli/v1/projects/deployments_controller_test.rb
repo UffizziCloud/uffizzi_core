@@ -63,9 +63,6 @@ class UffizziCore::Api::Cli::V1::Projects::DeploymentsControllerTest < ActionCon
     Sidekiq::Worker.clear_all
     Sidekiq::Testing.fake!
 
-    google_dns_stub
-    UffizziCore::GoogleCloudDnsClient.any_instance.stubs(:create_dns_record).returns(true)
-
     create(:credential, :docker_hub, account: @admin.organizational_account)
     file_content = File.read('test/fixtures/files/test-compose-success.yml')
     encoded_content = Base64.encode64(file_content)
