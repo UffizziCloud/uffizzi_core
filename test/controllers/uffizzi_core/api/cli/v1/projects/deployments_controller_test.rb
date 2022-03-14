@@ -249,7 +249,7 @@ class UffizziCore::Api::Cli::V1::Projects::DeploymentsControllerTest < ActionCon
       stub_github_branch_request(compose_container_repository_id, compose_container_branch, github_branch_data)
 
     base_attributes = attributes_for(:compose_file).slice(:source, :path)
-    compose_file = create(:compose_file, project: @project, added_by: @admin)
+    create(:compose_file, project: @project, added_by: @admin)
     content = json_fixture('files/github/compose_files/hello_world_compose.json')[:content]
     compose_file_attributes = base_attributes.merge(content: content, repository_id: nil)
     params = {
